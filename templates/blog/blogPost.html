@@ -3,36 +3,91 @@
 {% block title %}blogPost{% endblock title %}
 
 {% block body %}
-<div class="container my-3">
+{% load humanize %}
+{% load extras %}
+<div class="container my-3 mb-5">
     <h2 class="blog-post-title">{{post.title}}</h2>
     <p class="blog-post-meta">{{post.timeStamp}} by <a href="#">{{post.author}}</a></p>
 
-    <p>{{post.content}}</p>
+    <p class="text-break" >{{post.content|safe}}</p>
     <hr>
-
 </div>
 
 <div class="container">
-    <h2>Comments :</h2>
-    <div class="row my-3">
-        <div class="col-md-2 bg-primary">Image here</div>
-        <div class="col-md-10 bg-success"> <b>Nitish Rao</b> says this is the best website i have seen</div>
+    <h2>Comments ({{comments.count}})</h2>
+    <div class="my-2">
+        {% if user.is_authenticated %}
+        <form method="POST" action="/blog/postComment">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="comment" class="form-label">Post Comment</label>
+                <input type="text" class="form-control" name="comment" id="comment" placeholder="Enter comment here"
+                    pattern=".*\S.*" trim required>
+                <input type="hidden" name="ParentSno" value="">
+            </div>
+            <input type="hidden" name="postSno" value={{post.sno}}>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+        {% else %}
+        <p>Please login to comment</p>
+        {% endif %}
     </div>
+    {% for comment in comments %}
     <div class="row my-3">
-        <div class="col-md-2 bg-primary">Image here</div>
-        <div class="col-md-10 bg-success"> <b>Nitish Rao</b> says this is the best website i have seen</div>
+        <div class="col-md-1">
+            <img class="rounded mx-auto d-block w-100 p-3" src="/static/img/user.png" alt = "user">
+        </div>
+        <div class="col-md-11 pt-2">
+            <b>{{comment.user.username}}</b> <span class="badge bg-secondary">{{comment.timestamp|naturaltime}}</span>
+            <div class="my-2 text-break">{{comment.comment}}</div>
+            <div class="reply mx-0">
+                <p class="d-inline-flex gap-1">
+                    {% if user.is_authenticated %}
+                    <button class="btn btn-dark btn-sm mb-1" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#replyBox{{comment.sno}}" aria-expanded="false" aria-controls="replyBox{{comment.sno}}">
+                    Reply
+                    </button>
+                    {% endif %}
+                    {% if comment.sno in replyDict %}
+                    <button class="btn btn-link btn-sm text-decoration-none text-dark fw-bold fs-6 dropdown-toggle" type="button" data-bs-toggle="collapse" 
+                        data-bs-target="#replies{{comment.sno}}" aria-expanded="false" aria-controls="replies{{comment.sno}}">
+                        <span class="caret"></span> Replies
+                    </button>
+                    {% endif %}
+                </p>
+
+                <div class="collapse" id="replyBox{{comment.sno}}">
+                    <div class="mt-1">
+                        <form method="POST" action="/blog/postComment">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                <label for="comment" class="form-label">Post Reply</label>
+                                <input type="text" class="form-control" name="comment" id="comment"
+                                    placeholder="Enter reply here" pattern=".*\S.*" trim required>
+                                <input type="hidden" name="parentSno" value={{comment.sno}}>
+                            </div>
+                            <input type="hidden" name="postSno" value={{post.sno}}>
+                            <button type="submit" class="btn btn-primary btn-sm">Submit</button>
+                        </form>
+                    </div>
+                </div>
+                <div class="collapse" id = "replies{{comment.sno}}">
+                    {% for reply in replyDict|get_val:comment.sno  %}
+                    <div class="row my-3">
+                        <div class="col-md-1">
+                            <img class="rounded mx-auto d-block w-100 p-3" src="/static/img/user.png" alt = "user">
+                        </div>
+                        <div class="col-md-11 pt-2">
+                            <b>{{reply.user.username}}</b> <span class="badge bg-secondary">{{reply.timestamp|naturaltime}}</span>
+                            <div class="my-2 text-break">{{reply.comment}}</div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div> 
+            </div>
+        </div>
     </div>
-    <div class="row my-3">
-        <div class="col-md-2 bg-primary">Image here</div>
-        <div class="col-md-10 bg-success"> <b>Nitish Rao</b> says this is the best website i have seen</div>
-    </div>
-    <div class="row my-3">
-        <div class="col-md-2 bg-primary">Image here</div>
-        <div class="col-md-10 bg-success"> <b>Nitish Rao</b> says this is the best website i have seen</div>
-    </div>
-    <div class="row my-3">
-        <div class="col-md-2 bg-primary">Image here</div>
-        <div class="col-md-10 bg-success"> <b>Nitish Rao</b> says this is the best website i have seen</div>
-    </div>
+    {% endfor %}
+
 </div>
 {% endblock body %}
