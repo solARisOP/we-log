@@ -7,7 +7,8 @@ class Post(models.Model):
     sno = models.AutoField(primary_key=True)
     title = models.CharField(max_length=255)
     content = models.TextField()
-    author = models.CharField(max_length=13)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    author = models.CharField(max_length=15, null=True)
     slug = models.CharField(max_length=130)
     timeStamp = models.DateTimeField(blank=True)
     

@@ -7,7 +7,7 @@
 {% load extras %}
 <div class="container my-3 mb-5">
     <h2 class="blog-post-title">{{post.title}}</h2>
-    <p class="blog-post-meta">{{post.timeStamp}} by <a href="#">{{post.author}}</a></p>
+    <p class="blog-post-meta">{{post.timeStamp}} by <a href="/account/{{post.user.username}}">{{post.user.username}}</a></p>
 
     <p class="text-break" >{{post.content|safe}}</p>
     <hr>
@@ -23,7 +23,7 @@
                 <label for="comment" class="form-label">Post Comment</label>
                 <input type="text" class="form-control" name="comment" id="comment" placeholder="Enter comment here"
                     pattern=".*\S.*" trim required>
-                <input type="hidden" name="ParentSno" value="">
+                <input type="hidden" name="parentSno" value="">
             </div>
             <input type="hidden" name="postSno" value={{post.sno}}>
             <button type="submit" class="btn btn-primary">Submit</button>

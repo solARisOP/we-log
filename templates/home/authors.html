@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}UA{% endblock title %}
+
+{% block authoractive %} active {% endblock authoractive %}
+
+{% block body %}
+<div class="container my-3">
+    <h2>Acticles on weLog</h2>
+    {% for user_ in users %}
+    <div class="row g-0 border rounded overflow-hidden flex-md-row my-4 shadow-sm h-md-250 position-relative">
+        <div class="col p-4 d-flex flex-column position-static">
+            <h3 class="mb-0"><a class="text-decoration-none text-dark" href="/account/{{user_.username}}">{{user_.username}}</a></h3>
+            <p class="card-text mb-auto"><div class="preview">{{profile.description|safe |truncatechars:500}}</div></p>
+            <div class="my-2">
+                <a href="/account/{{user_.username}}" role="button" class="btn btn-dark">visit profile</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock body %}

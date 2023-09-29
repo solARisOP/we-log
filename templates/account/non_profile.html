@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}profile{% endblock title %}
+
+{% block youactive %} active {% endblock youactive %}
+
+{% block body %}
+<div class="row d-flex justify-content-center align-item-center w-50 mx-auto">
+    <h1 class="display-1 w-100 text-center mb-5">weLog</h1>
+    <p class="fs-5 fw-light">Welcome to Welog, your ultimate blogging platform where your thoughts, ideas, and experiences find their home on the web.
+       Welog is more than just a blog; it's a community of passionate writers, thinkers, and storytellers.</p>
+    <div class="w-25">
+        <button type="button" class="btn bg-black btn-lg text-white w-100 mt-5" data-bs-toggle="modal"
+            data-bs-target="#loginModal">
+            login
+        </button>
+    </div>
+    <hr class="my-3">
+    <div class="w-25">
+        <button type="button" class="btn bg-black btn-lg text-white w-100 mb-5" data-bs-toggle="modal"
+            data-bs-target="#signupModal">
+            signup
+        </button>
+    </div>
+    <p class="fs-5 fw-light" >Join Welog and embark on a journey where your thoughts, ideas, and experiences take center stage. 
+    We're not just a platform; we're a canvas for your imagination, a stage for your narratives, and a hub for your connections.
+    Discover Welog and let your voice resonate in the digital realm.</p>
+</div>
+{% endblock body %}
