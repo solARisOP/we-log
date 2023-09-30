@@ -5,8 +5,8 @@
 {% block contactactive %} active {% endblock contactactive %}
 
 {% block body %}
-<div class="container my-3">
-    <h3>Contact weLog Admin</h3>
+<div class="container-fluid my-3" style="max-width: 1000px;" >
+    <h3 class="mb-4">Contact weLog Admin</h3>
     <form method = "POST" action="/contact">
         {% csrf_token %}
         {% if user.is_authenticated %}
@@ -26,7 +26,7 @@
           <textarea class="form-control" name="content" id="content" cols="30" rows="7" pattern = ".*\S+.*" trim required></textarea>
         </div>
         
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="submit" class="btn btn-dark">Submit</button>
       </form>
 </div>
 {% endblock body %}

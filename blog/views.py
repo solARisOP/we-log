@@ -12,7 +12,7 @@ def blogHome(request):
 
 def blogPost(request, slug):
     try:
-        post = Post.objects.get(slug = slug)
+        post = Post.objects.get(sno = slug)
         comments = BlogComment.objects.filter(post = post, parent = None)
         replies = BlogComment.objects.filter(post = post).exclude(parent = None)
 
@@ -46,4 +46,22 @@ def postComment(request):
             comment = BlogComment(comment = comment, user = user, post = post, parent = parent)
             messages.success(request, "reply posted successfully")
         comment.save()
-    return redirect(f"/blog/{post.slug}") 
+    return redirect(f"/blog/{post.sno}") 
+
+def createBlog(request):
+    if request.user.is_authenticated:
+        return render(request, "blog/blogCreate.html")
+    else:
+        return redirect('/you')
+
+def postBlog(request):
+    print("entering")
+    if (request.user.is_authenticated) and (request.method=="POST"):
+        title = request.POST["title"]
+        content = request.POST["blog"]
+        description = request.POST["desc"]
+        post = Post.objects.create(title = title, content = content, description = description, user = request.user, slug = title)
+        post.save()
+        print("here")
+        return redirect('/you')
+        

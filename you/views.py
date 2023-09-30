@@ -27,7 +27,7 @@ def profileEdit(request):
         user.first_name = fname
         user.last_name = lname
         user.save()
-        profile = UserProfile.objects.get(user = request.user)
+        profile, created = UserProfile.objects.get_or_create(user = request.user)
         profile.description = desc
         profile.save()
         return redirect('/you') 

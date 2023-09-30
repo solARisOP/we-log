@@ -7,13 +7,13 @@ class Post(models.Model):
     sno = models.AutoField(primary_key=True)
     title = models.CharField(max_length=255)
     content = models.TextField()
+    description = models.TextField(null=True, blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    author = models.CharField(max_length=15, null=True)
     slug = models.CharField(max_length=130)
-    timeStamp = models.DateTimeField(blank=True)
+    timeStamp = models.DateTimeField(default=now, blank=True)
     
     def __str__(self):
-        return self.title + " by " + self.author
+        return self.title + " by " + self.user.username
     
 class BlogComment(models.Model):
     sno = models.AutoField(primary_key=True)
