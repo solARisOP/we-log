@@ -44,7 +44,8 @@
           {% if user.is_authenticated %}
           <ul class="navbar-nav">
             <li class="nav-item dropdown ps-2 pe-3">
-              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                aria-expanded="false">
                 Welcome {{request.user}}
               </a>
               <div class="dropdown-menu">
@@ -116,10 +117,11 @@
               </div>
               <div class="mb-3">
                 <label for="avatar" class="form-label">Profile image</label>
-                <input type="file" class ="form-control" id="avatar" name="avatar" accept="image/png, image/jpeg, image/jpg" />
+                <input type="file" class="form-control" id="avatar" name="avatar"
+                  accept="image/png, image/jpeg, image/jpg" />
               </div>
-              <div class="mb-3">
-                <label for="pass2" class="form-label">Profile description</label>
+              <div class="mb-2">
+                <label for="desc" class="form-label">Profile description</label>
                 <textarea class="form-control" name="desc" id="desc" cols="30" rows="7"></textarea>
               </div>
               <button type="submit" class="btn btn-dark my-2">Submit</button>
@@ -143,20 +145,22 @@
               <div class="mb-3">
                 <label for="fname" class="form-label">First Name</label>
                 <input type="text" class="form-control" id="fname" name="fname" placeholder="first name" minlength="1"
-                  pattern=".*\S+.*" value = {{user.first_name}} trim required>
+                  pattern=".*\S+.*" value={{user.first_name}} trim required>
               </div>
               <div class="mb-3">
                 <label for="lname" class="form-label">last Name</label>
                 <input type="text" class="form-control" id="lname" name="lname" placeholder="last name" minlength="1"
-                  pattern=".*\S+.*" value = {{user.last_name}} trim required>
+                  pattern=".*\S+.*" value={{user.last_name}} trim required>
               </div>
               <div class="mb-3">
                 <label for="avatar" class="form-label">Profile image</label>
-                <input type="file" class ="form-control" id="avatar" name="avatar" accept="image/png, image/jpeg, image/jpg" />
+                <input type="file" class="form-control" id="avatar" name="avatar"
+                  accept="image/png, image/jpeg, image/jpg" />
               </div>
-              <div class="mb-3">
-                <label for="pass2" class="form-label">Profile description</label>
-                <textarea class="form-control" name="desc" id="desc" cols="30" rows="7" >{{profile.description}}</textarea>
+              <div class="mb-2">
+                <label for="desc" class="form-label">Profile description</label>
+                <textarea class="form-control" name="desc" id="desc" cols="30"
+                  rows="7">{{profile.description}}</textarea>
               </div>
               <button type="submit" class="btn btn-dark my-2">Submit</button>
             </form>
@@ -181,12 +185,73 @@
                 <input type="text" class="form-control" id="loginusername" name="loginusername"
                   placeholder="Enter your username" pattern="^\S+$" minlength="3" maxlength="10" required>
               </div>
-              <div class="mb-3">
+              <div class="mb-2">
                 <label for="pass" class="form-label">Enter a Password</label>
-                <input type="password" class="form-control" id="loginpassword" name="loginpassword" placeholder="Enter your password"
-                  pattern="^\S+$" minlength="8" maxlength="15" required>
+                <input type="password" class="form-control" id="loginpassword" name="loginpassword"
+                  placeholder="Enter your password" pattern="^\S+$" minlength="8" maxlength="15" required>
+                <div class="text-end mt-2"><a class="text-decoration-none text-dark" role="button" id="forgetpass"
+                    data-bs-toggle="modal" data-bs-target="#otpverifModal">Forgot Password</a></div>
               </div>
-              <button type="submit" class="btn btn-dark my-2">Submit</button>
+              <button type="submit" class="btn btn-dark mb-2">Submit</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- otp verification Modal -->
+    <div class="modal fade" id="otpverifModal" tabindex="-1" aria-labelledby="otpverifModal" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="otpverifModalTitle">OTP validation</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body" id="otp-verif-form">
+            <div class="mb-2">
+              <label for="resemail" class="form-label">Email</label>
+                {% csrf_token %}
+                <input type="email" class="form-control" id="resemail" name="resemail"
+                  placeholder="Enter your email which is registered with us" required>
+              </div>
+              <button class="btn btn-dark mb-3" id="sendotp">Send OTP</button>
+              <div class="mb-2" id="otpdiv" style="display : none;">
+                <label for="pass" class="form-label">OTP</label>
+                <input type="text" class="form-control" id="resotp" name="resotp" placeholder="Enter your OTP"
+                  minlength="6" maxlength="6">
+              </div>
+              <div class="my-1" id="countdown" style="display : none;"></div>
+              <button  class="btn btn-dark mb-2" id="subbutton" style ="display : none;">Submit</button>
+              <div style="display: none;" id="invalidtext"><p class="text-danger">invalid OTP</p></div>
+              <a id="selfclick" data-bs-toggle="modal" data-bs-target="#passresetModal"
+                hidden></a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- password reset Modal -->
+    <div class="modal fade" id="passresetModal" tabindex="-1" aria-labelledby="passresetModal" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="passresetModalTitle">Password Reset</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form onsubmit="return setAction(this)" method='POST'>
+              {% csrf_token %}
+              <div class="mb-3">
+                <label for="respass1" class="form-label">Password</label>
+                <input type="password" class="form-control" id="respass1" name="respass1"
+                  placeholder="Choose your password" pattern="^\S+$" minlength="8" maxlength="15" required>
+              </div>
+              <div class="mb-3">
+                <label for="respass2" class="form-label">Confirm Password</label>
+                <input type="password" class="form-control" id="respass2" name="respass2"
+                  placeholder="Enter your password again" pattern="^\S+$" minlength="8" maxlength="15" required>
+              </div>
+              <button type="submit" class="btn btn-dark mb-2">Submit</button>
             </form>
           </div>
         </div>
@@ -195,12 +260,124 @@
     {% block body %}
     {% endblock body %}
 
+    <script>
+      var otp = 10000001;
+      const sendotpButton = document.getElementById('sendotp');
+      const submitButton = document.getElementById('subbutton');
+      const passmodal = document.getElementById("selfclick");
+      const invalidtext = document.getElementById("invalidtext");
+      const countdownDisplay = document.getElementById('countdown');
+      const otpdiv = document.getElementById('otpdiv');
+      const userInputOTP = document.getElementById('resotp');
+      const userInputEmail = document.getElementById('resemail');
+      const otp_modal = document.getElementById('otp-verif-form');
+
+      function send_OTP(){
+        otp = 10000001;
+        clearall();
+        let email = userInputEmail.value;
+        email = email.trim()
+        const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
+        fetch('/you/otpverif', {
+          method: 'POST',
+          body: JSON.stringify({ message: email }),
+          headers: {            
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrfToken,
+          },
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if ('message' in data) {
+              const userMessageElement = document.createElement('div');
+              userMessageElement.classList.add('my-3');
+              userMessageElement.textContent = data['message'];
+              otp_modal.appendChild(userMessageElement);
+            }
+            else {
+              sendotpButton.disabled = true;
+              startTimer();
+              console.log("here")
+              otp = data['otp'];
+            }
+          })
+          .catch((error) => {
+            console.error('Error:', error);
+          });
+      }      
+      
+      function startTimer() {
+        let countdown = 100;
+        otpdiv.style.display = "block";
+        submitButton.style.display = "block";
+        countdownDisplay.style.display = "block";
+        const countdownInterval = setInterval(() => {
+          if (countdown <= 0) {
+            clearInterval(countdownInterval); // Stop the countdownDisplay
+            clearall();
+            sendotpButton.disabled = false;
+          }
+          else {
+            countdownDisplay.textContent = `OTP valid till: ${countdown} seconds`;
+          }
+          countdown--;
+        }, 1000); 
+      }
+
+      var clearall = ()=>{
+        otpdiv.style.display = "none";
+        submitButton.style.display = "none";
+        countdownDisplay.style.display = "none";
+        invalidtext.style.display = "none";
+      }
+
+      sendotpButton.addEventListener('click', send_OTP);
+      submitButton.addEventListener('click', function(e) {
+        let userotp = userInputOTP.value;
+        if (userotp === otp) {
+          console.log("here");
+          passmodal.click();
+          clearall();
+        }
+        else{
+          invalidtext.style.display = "block";
+        }
+      });
+
+    </script>
+    <script>
+      function setAction(form) {
+        pass1 = document.getElementById('respass1').value;
+        pass2 = document.getElementById('respass2').value;
+        if(pass1 === pass2)
+        {
+          let specialChars =/[`!@#$%^&*()_\-+=\[\]{};':"\\|,.<>\/?~]/;
+          if(specialChars.test(pass1) && !pass1.includes(" ") && (/\d/.test(pass1)))
+          {
+            form.action = "/you/passreset"
+            return true;
+          }
+          else{
+            alert("invalid password")
+            return false
+          }
+        }
+        else{
+          alert("passwords doesnot match")
+          return false
+        }
+        form.action = "/you/passreset";
+        ;
+      }
+
+    </script>
     {% block js %}
     {% endblock js %}
-    
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
-      crossorigin="anonymous"></script>
+      crossorigin="anonymous">
+    </script>
   </body>
 
 </html>
