@@ -20,23 +20,23 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <li class="nav-item">
+            <li class="nav-item mx-2">
               <a class="nav-link {% block homeactive %}{% endblock homeactive %}" aria-current="page" href="/">Home</a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item mx-2">
               <a class="nav-link {% block youactive %}{% endblock youactive %}" aria-current="page" href="/you">You</a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item mx-2">
               <a class="nav-link {% block blogactive %}{% endblock blogactive %}" href="/blog">Blog</a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item mx-2">
               <a class="nav-link {% block authoractive %}{% endblock authoractive %}" href="/account">UA</a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item mx-2">
               <a class="nav-link {% block contactactive %}{% endblock contactactive %}" href="/contact">Contact</a>
             </li>
           </ul>
-          <form method="GET" action="/search" class="d-flex" role="search">
+          <form method="GET" action="/search" style="display : {% block search %}{% endblock search %};" role="search">
             <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="query"
               id="search">
             <button class="btn btn-outline-dark me-2 text-white" type="submit">Search</button>
@@ -50,6 +50,7 @@
               </a>
               <div class="dropdown-menu">
                 <a class="dropdown-item" href="/logout">Logout </a>
+                <a id="user-pass-reset" class="dropdown-item" role="button" data-bs-toggle="modal" data-bs-target="#passresetModal">Reset Password</a>
               </div>
             </li>
           </ul>
@@ -83,13 +84,7 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <form action="/signup" method="POST">
               {% csrf_token %}
-              <div class="mb-3">
-                <label for="username" class="form-label">Username</label>
-                <input type="text" class="form-control" id="username" name="username"
-                  placeholder="choose a unique username" pattern="^\S+$" minlength="3" maxlength="10" required>
-              </div>
               <div class="mb-3">
                 <label for="fname" class="form-label">First Name</label>
                 <input type="text" class="form-control" id="fname" name="fname" placeholder="first name" minlength="1"
@@ -106,16 +101,6 @@
                   required>
               </div>
               <div class="mb-3">
-                <label for="pass1" class="form-label">Password</label>
-                <input type="password" class="form-control" id="pass1" name="pass1" placeholder="Choose your password"
-                  pattern="^\S+$" minlength="8" maxlength="15" required>
-              </div>
-              <div class="mb-3">
-                <label for="pass2" class="form-label">Confirm Password</label>
-                <input type="password" class="form-control" id="pass2" name="pass2"
-                  placeholder="Enter your password again" pattern="^\S+$" minlength="8" maxlength="15" required>
-              </div>
-              <div class="mb-3">
                 <label for="avatar" class="form-label">Profile image</label>
                 <input type="file" class="form-control" id="avatar" name="avatar"
                   accept="image/png, image/jpeg, image/jpg" />
@@ -124,12 +109,74 @@
                 <label for="desc" class="form-label">Profile description</label>
                 <textarea class="form-control" name="desc" id="desc" cols="30" rows="7"></textarea>
               </div>
+              <button id="sub-signup-1"type="submit" class="btn btn-dark my-2">Submit</button>
+              <a id="selfclick-2" data-bs-toggle="modal" data-bs-target="#createOtpVerifModal"
+                hidden></a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!--signup otp verification madal-->
+    <div class="modal fade" id="createOtpVerifModal" tabindex="-1" aria-labelledby="createOtpVerifModal" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="createOtpVerifModalTitle">OTP validation</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body" id="otp-verif-form">
+              <div class="mb-2">
+                <label for="createresotp" class="form-label">OTP</label>
+                {% csrf_token %}
+                <input type="text" class="form-control" id="createresotp" name="createresotp" placeholder="Enter your OTP"
+                pattern="^\S+$" minlength="6" maxlength="6" required>
+              </div>
+              <div class="my-1" id="countdown-2"></div>
+              <button  class="btn btn-dark mb-2" id="createsubbutton">Submit</button>
+              <div style="display: none;" id="invalidtext-2"><p class="text-danger">invalid OTP</p></div>
+              <a id="selfclick-3" data-bs-toggle="modal" data-bs-target="#createUserModal"
+                hidden></a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!--sign Up Modal-2-->
+    <div class="modal fade" id="createUserModal" tabindex="-1" aria-labelledby="createUserModal" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="createUserModalTitle">Create User</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form onsubmit="return createUser(this)" method="POST">
+              {% csrf_token %}
+              <div class="mb-3">
+                <label for="createusername" class="form-label">Username</label>
+                <input type="text" class="form-control" id="createusername" name="createusername"
+                  placeholder="choose a unique username" pattern="^\S+$" minlength="3" maxlength="10" required>
+              </div>
+              <div class="mb-3">
+                <label for="createpass1" class="form-label">Password</label>
+                <input type="password" class="form-control" id="createpass1" name="createpass1" placeholder="Choose your password"
+                  pattern="^\S+$" minlength="8" maxlength="15" required>
+                  <div id="passHelp" class="form-text">your password should atleat be of length 8 and contain atleast one uppercase,
+                     one lowercase, one special character and one number</div>
+              </div>
+              <div class="mb-3">
+                <label for="createpass2" class="form-label">Confirm Password</label>
+                <input type="password" class="form-control" id="createpass2" name="createpass2"
+                  placeholder="Enter your password again" pattern="^\S+$" minlength="8" maxlength="15" required>
+              </div>
               <button type="submit" class="btn btn-dark my-2">Submit</button>
             </form>
           </div>
         </div>
       </div>
     </div>
+
 
     <!-- Profile edit Modal -->
     <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModal" aria-hidden="true">
@@ -189,7 +236,7 @@
                 <label for="pass" class="form-label">Enter a Password</label>
                 <input type="password" class="form-control" id="loginpassword" name="loginpassword"
                   placeholder="Enter your password" pattern="^\S+$" minlength="8" maxlength="15" required>
-                <div class="text-end mt-2"><a class="text-decoration-none text-dark" role="button" id="forgetpass"
+                <div class="text-end mt-2"><a class="link-opacity-75 link-underline-opacity-0 link-underline-opacity-100-hover link-dark link-opacity-100-hover" role="button" id="forgetpass"
                     data-bs-toggle="modal" data-bs-target="#otpverifModal">Forgot Password</a></div>
               </div>
               <button type="submit" class="btn btn-dark mb-2">Submit</button>
@@ -215,6 +262,7 @@
                   placeholder="Enter your email which is registered with us" required>
               </div>
               <button class="btn btn-dark mb-3" id="sendotp">Send OTP</button>
+              <div class="my-2" id="invalid-email"></div>
               <div class="mb-2" id="otpdiv" style="display : none;">
                 <label for="pass" class="form-label">OTP</label>
                 <input type="text" class="form-control" id="resotp" name="resotp" placeholder="Enter your OTP"
@@ -241,10 +289,21 @@
           <div class="modal-body">
             <form onsubmit="return setAction(this)" method='POST'>
               {% csrf_token %}
+              <div style="display : none" id="curr-password">
+                <div class="mb-3">
+                  <label for="useroldpass" class="form-label">Current Password</label>
+                  <input type="password" class="form-control" id="useroldpass" name="useroldpass"
+                    placeholder="Enter you current password" pattern="^\S+$" minlength="8" maxlength="15" aria-describedby="passHelp" required>
+                </div>
+                <div class="mb-3 mt-4">
+                  <hr>
+                </div>
+              </div>
               <div class="mb-3">
-                <label for="respass1" class="form-label">Password</label>
+                <label for="respass1" class="form-label">New Password</label>
                 <input type="password" class="form-control" id="respass1" name="respass1"
-                  placeholder="Choose your password" pattern="^\S+$" minlength="8" maxlength="15" required>
+                  placeholder="Choose your password" pattern="^\S+$" minlength="8" maxlength="15" aria-describedby="passHelp" required>
+                <div id="passHelp" class="form-text">your password should atleat be of length 8 and contain atleast one uppercase, one lowercase, one special character and one number</div>
               </div>
               <div class="mb-3">
                 <label for="respass2" class="form-label">Confirm Password</label>
@@ -271,10 +330,14 @@
       const userInputOTP = document.getElementById('resotp');
       const userInputEmail = document.getElementById('resemail');
       const otp_modal = document.getElementById('otp-verif-form');
+      const invalidEmail = document.getElementById('invalid-email');
+      const currpass = document.getElementById('curr-password');
+      const passreset= document.getElementById('user-pass-reset');
 
       function send_OTP(){
         otp = 10000001;
         clearall();
+        sendotpButton.disabled = true;
         let email = userInputEmail.value;
         email = email.trim()
         const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
@@ -290,9 +353,9 @@
           .then((data) => {
             if ('message' in data) {
               const userMessageElement = document.createElement('div');
-              userMessageElement.classList.add('my-3');
+              userMessageElement.classList.add('my-1');
               userMessageElement.textContent = data['message'];
-              otp_modal.appendChild(userMessageElement);
+              invalidEmail.appendChild(userMessageElement);
             }
             else {
               sendotpButton.disabled = true;
@@ -329,13 +392,17 @@
         submitButton.style.display = "none";
         countdownDisplay.style.display = "none";
         invalidtext.style.display = "none";
+        while(invalidEmail.hasChildNodes())
+        {
+          invalidEmail.removeChild(invalidEmail.firstChild)
+        }
       }
 
       sendotpButton.addEventListener('click', send_OTP);
       submitButton.addEventListener('click', function(e) {
         let userotp = userInputOTP.value;
         if (userotp === otp) {
-          console.log("here");
+          currpass.style.display = "none";
           passmodal.click();
           clearall();
         }
@@ -346,34 +413,147 @@
 
     </script>
     <script>
+
       function setAction(form) {
         pass1 = document.getElementById('respass1').value;
         pass2 = document.getElementById('respass2').value;
         if(pass1 === pass2)
         {
           let specialChars =/[`!@#$%^&*()_\-+=\[\]{};':"\\|,.<>\/?~]/;
-          if(specialChars.test(pass1) && !pass1.includes(" ") && (/\d/.test(pass1)))
+          if(specialChars.test(pass1) && !pass1.includes(" ") && (/\d/.test(pass1)) &&(/[a-z]/.test(pass1)) && (/[A-Z]/.test(pass1)))
           {
-            form.action = "/you/passreset"
+            form.action = "/you/passreset";
+            currpass.style.display = "none";
             return true;
           }
           else{
-            alert("invalid password")
-            return false
+            alert("invalid password format");
+            return false;
           }
         }
         else{
           alert("passwords doesnot match")
           return false
         }
-        form.action = "/you/passreset";
-        ;
       }
 
+      passreset.addEventListener('click', ()=>{
+        currpass.style.display = "block";
+      });
+      
     </script>
     {% block js %}
     {% endblock js %}
 
+    <script>
+      var subbutton2 = document.getElementById("sub-signup-1");
+      subbutton2.addEventListener('click', ()=>{
+        document.getElementById('invalidtext-2').style.display = "none";
+        subbutton2.disabled = true;
+        email = document.getElementById('email').value
+        fname = document.getElementById('fname').value
+        lname = document.getElementById('lname').value
+        desc = document.getElementById('desc').value
+        //avatar = document.getElementById('avatar').value
+        fetch('/you/check', {
+          method: 'POST',
+          body: JSON.stringify({ email : email, fname : fname, lname : lname, desc : desc }),
+          headers: {            
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrfToken,
+          },
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if(data['message'])
+            {
+              otp = data['otp'];
+              signupVerif();
+            }
+            else
+            {
+              alert("email already exists please select a different email");
+            }
+
+          })
+          .catch((error) => {
+            console.error('Error:', error);
+          });
+      })
+      document.getElementById('createsubbutton').addEventListener('click', ()=>{
+        if (userotp == otp) {
+          subbutton2.disabled = false;
+        else{
+          document.getElementById('invalidtext-2').style.display = "block";
+          document.getElementById('selfclick-3').click();
+        }
+      });
+
+      var signupVerif = () =>{
+        const otpmodal2 = document.getElementById("selfclick-2");
+        otpmodal2.click();
+        let countdown = 100;
+        const countdownDisplay2 = getElementById("countdown-2");
+        const countdownIntervalOtp = setInterval(() => {
+          if (countdown <= 0) {
+            subbutton2.disabled = false;
+            clearInterval(countdownIntervalOtp); // Stop the countdownDisplay
+          }
+          else {
+            countdownDisplay2.textContent = `OTP valid till: ${countdown} seconds`;
+          }
+          countdown--;
+        }, 1000);
+
+      }
+
+      var createUser = (form)=>{
+        fetch('/you/check', {
+          username = getElementById('createusername').value;
+
+          method: 'POST',
+          body: JSON.stringify({ username : username}),
+          headers: {            
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrfToken,
+          },
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data['message'])
+            {
+              if(pass1 === pass2)
+              {
+                let specialChars =/[`!@#$%^&*()_\-+=\[\]{};':"\\|,.<>\/?~]/;
+                if(specialChars.test(pass1) && !pass1.includes(" ") && (/\d/.test(pass1)) &&(/[a-z]/.test(pass1)) && (/[A-Z]/.test(pass1)))
+                {
+                  form.action = "/signup";
+                  return true;
+                }
+                else{
+                  alert("invalid password format");
+                  return false;
+                }
+              }
+              else
+              {
+                alert("passwords do not match");
+                return false;
+              }
+            }
+            else
+            {
+              alert('username already exists');
+              return false;
+            }
+          })
+          .catch((error) => {
+            console.error('Error:', error);
+          });
+      }
+
+    
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
       crossorigin="anonymous">

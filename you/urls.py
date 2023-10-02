@@ -6,4 +6,5 @@ urlpatterns = [
     path('profileEdit', views.profileEdit, name = "profileEdit"),
     path('otpverif', views.otpVerificater, name = "otpVerificater"),
     path('passreset', views.passwordReseter, name = "passwordReseter"),
+    path('check', views.checker, name = "checker"),
 ]

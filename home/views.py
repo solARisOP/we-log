@@ -58,15 +58,15 @@ def search(request):
 
 def handleSignup(request):
     if request.method == 'POST':
-        currentPath = request.META.get('HTTP_REFERER').split("127.0.0.1:8000")[1]
+        currentPath = request.session['currpath']
         username= request.POST['username']
-        fname= request.POST['fname']
-        lname= request.POST['lname']
-        email= request.POST['email']
+        fname= request.session['fname']
+        lname= request.session['lname']
+        email= request.session['email']
         pass1= request.POST['pass1']
         pass2= request.POST['pass2']
-        desc = request.POST['desc']
-        # avatar = request.POST['avatar']
+        desc = request.session['desc']
+        # avatar = request.session['avatar']
         if not username.isalnum():
             messages.error(request, "username must contain only aphabets and numbers")
             return redirect(currentPath)
