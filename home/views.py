@@ -59,17 +59,19 @@ def search(request):
 def handleSignup(request):
     if request.method == 'POST':
         currentPath = request.session['currpath']
-        username= request.POST['username']
+        username= request.session['username']
         fname= request.session['fname']
         lname= request.session['lname']
         email= request.session['email']
-        pass1= request.POST['pass1']
-        pass2= request.POST['pass2']
+        pass1= request.POST['createpass1']
+        pass2= request.POST['createpass2']
         desc = request.session['desc']
         # avatar = request.session['avatar']
+
         if not username.isalnum():
             messages.error(request, "username must contain only aphabets and numbers")
             return redirect(currentPath)
+        
         if pass1 != pass2:
             messages.error(request, "Passwords do not match")
             return redirect(currentPath)
@@ -78,13 +80,14 @@ def handleSignup(request):
         myuser.first_name = fname
         myuser.last_name = lname
         myuser.save()
-        myuserprofile = UserProfile.objects.create(description = desc, user = request.user)
+
+        myuserprofile = UserProfile.objects.create(description = desc, user = myuser)
         myuserprofile.save()
+
         messages.success(request, "Your weLog account has been created successfully")
         return redirect(currentPath)
 
-    else:
-        return HttpResponse("Request not found", status=400)
+    return HttpResponse("Request not found", status=400)
     
 def handleLogin(request):
     if request.method == 'POST':

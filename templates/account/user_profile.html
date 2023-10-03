@@ -77,4 +77,45 @@
         </div>
     </div>
 </section>
+
+
+<!-- Profile edit Modal -->
+<div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModal" aria-hidden="true"
+    data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="editModalTitle">Edit here</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="/you/profileEdit" method="POST">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="fname" class="form-label">First Name</label>
+                        <input type="text" class="form-control" id="fname" name="fname" placeholder="first name"
+                            minlength="1" pattern=".*\S+.*" value={{user.first_name}} trim required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="lname" class="form-label">last Name</label>
+                        <input type="text" class="form-control" id="lname" name="lname" placeholder="last name"
+                            minlength="1" pattern=".*\S+.*" value={{user.last_name}} trim required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="avatar" class="form-label">Profile image</label>
+                        <input type="file" class="form-control" id="avatar" name="avatar"
+                            accept="image/png, image/jpeg, image/jpg" />
+                    </div>
+                    <div class="mb-2">
+                        <label for="desc" class="form-label">Profile description</label>
+                        <textarea class="form-control" name="desc" id="desc" cols="30"
+                            rows="7">{{profile.description}}</textarea>
+                    </div>
+                    <button type="submit" class="btn btn-dark my-2">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 {% endblock body %}

@@ -89,6 +89,7 @@ def otpVerificater(request):
     
     return HttpResponse('very bad request', status=405)
 
+# when user is logged out
 def passwordReseter(request):
     if request.method == "POST":
         if request.user.is_authenticated == False:
@@ -139,6 +140,13 @@ def checker(request):
             email = data['email']
             flag = User.objects.filter(email = email).exists()
             if flag == 0:
+                try:
+                    v = validate_email(email)
+                    email = v["email"] 
+                except EmailNotValidError as e:
+                    message = "invalid email"
+                    return JsonResponse({'message' : message})
+                
                 request.session['email'] = email
                 request.session['desc'] = data['desc']
                 # request.session['img'] = data['avatar']
@@ -168,10 +176,18 @@ def checker(request):
                 email_from = settings.EMAIL_HOST_USER
                 recipient_list = [email]
                 send_mail(subject, message, email_from, recipient_list)
-                message = False if flag==1 else True
+                message = True
                 return JsonResponse({'message' : message, 'otp' : f"{OTP}"})
+
+            else:
+                message = False
+                return JsonResponse({'message' : message})
+            
         else:  
             flag = User.objects.filter(username = data['username']).exists()
+            print("here")
+            if flag == 0:
+                request.session["username"] = data['username']
             message = False if flag else True
             return JsonResponse({'message' : message})
     
