@@ -1,32 +1,35 @@
 {% extends "base.html" %}
 
-{% block title %}Create Blog{% endblock title %}
+{% block title %}BlogUpdate{% endblock title %}
 
 {% block youactive %} active {% endblock youactive %}
+
 {% block search %}none{% endblock search %}
+
 {% block body %}
 <div class="container-fluid my-3" style="max-width: 1000px;">
     <h3 class="mb-4">Create your blog</h3>
-    <form method="POST" onsubmit="return postBlog(this)">
+    <form method="POST" onsubmit="return updateBlog(this)">
         {% csrf_token %}
+        <input type="number" name="blogId" hidden  value={{post.sno}}>
         <div class="mb-3">
-            <label for="title" class="form-label">Title</label>
-            <input type="text" class="form-control" id="title" name="title" aria-describedby="title" pattern=".*\S+.*"
+            <label for="utitle" class="form-label">Title</label>
+            <input type="text" class="form-control" id="utitle" name="utitle" aria-describedby="title" pattern=".*\S+.*" value = {{post.title}}
                 required trim>
         </div>
         <div class="mb-3">
-            <label for="content" class="form-label">Content</label>
-            <textarea class="form-control" name="content" id="content" cols="30" rows="25" pattern=".*\S+.*" trim
-                required minlength="50">Write your thoughts/experiences/knowledge anything and everything</textarea>
+            <label for="ucontent" class="form-label">Content</label>
+            <textarea class="form-control" name="ucontent" id="ucontent" cols="30" rows="25" pattern=".*\S+.*" trim
+                required minlength="50">{{post.content|safe}}</textarea>
         </div>
         <div class="mb-3">
-            <label for="desc" class="form-label">Description</label>
-            <textarea class="form-control" name="desc" id="desc" cols="30" rows="5" pattern=".*\S+.*" trim required
-                minlength="15"></textarea>
+            <label for="udesc" class="form-label">Description</label>
+            <textarea class="form-control" name="udesc" id="udesc" cols="30" rows="5" pattern=".*\S+.*" trim required
+                minlength="15">{{post.description|safe}}</textarea>
         </div>
-        <input type="text" id="blog" name = "blog" hidden>
+        <input type="text" id="ublog" name = "ublog" hidden>
 
-        <button type="submit" class="btn btn-dark" >Submit</button>
+        <button type="submit" class="btn btn-dark">Update</button>
     </form>
 </div>
 {% endblock body %}
@@ -38,7 +41,7 @@
 
 <script type="text/javascript">
     tinymce.init({
-        selector: '#content',
+        selector: '#ucontent',
         plugins: [
             'advlist', 'autolink', 'link', 'image', 'lists', 'charmap', 'preview', 'anchor', 'pagebreak',
             'searchreplace', 'wordcount', 'visualblocks', 'visualchars', 'code', 'fullscreen', 'insertdatetime',
@@ -55,9 +58,9 @@
 </script>
 
 <script>
-    function postBlog(form) {
-        document.getElementById('blog').value = tinymce.get("content").getContent();
-        form.action = "/blog/postblog";
+    function updateBlog(form) {
+        document.getElementById('ublog').value = tinymce.get("ucontent").getContent();
+        form.action = "/blog/updater";
         return true;
     }
 </script>

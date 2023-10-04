@@ -55,13 +55,67 @@ def createBlog(request):
         return redirect('/you')
 
 def postBlog(request):
-    print("entering")
     if (request.user.is_authenticated) and (request.method=="POST"):
         title = request.POST["title"]
         content = request.POST["blog"]
         description = request.POST["desc"]
         post = Post.objects.create(title = title, content = content, description = description, user = request.user, slug = title)
         post.save()
-        print("here")
+        messages.success(request, "You blog has been successfully posted")
         return redirect('/you')
+    
+def updateView(request, sno):
+    if request.user.is_authenticated:
+        currentPath = request.META.get('HTTP_REFERER').split("127.0.0.1:8000")[1]
+        post = Post.objects.get(sno = sno)
+        if post is not None and post.user == request.user:
+            context = {'post' : post}
+            return render(request, "blog/blogUpdate.html", context)
+        else:
+            messages.error(request, "cannot understand you request")
+            return redirect(currentPath)
+    
+    return HttpResponse("very bad request", status= 405)
+
+def updateBlog(request):
+    if request.user.is_authenticated:
+        title = request.POST['utitle']
+        content = request.POST['ublog']
+        description = request.POST['udesc']
+        sno = request.POST['blogId']
+
+        post = Post.objects.get(sno = sno)
+        if post is not None and post.user == request.user:
+            post.title = title
+            post.content = content
+            post.description = description
+            post.save()
+            messages.success(request, "Your Post has been successfully updated")
+            return redirect("/you")
+        else:
+            messages.error(request, "cannot understand you request")
+            return redirect("/") 
+        
+    return HttpResponse("very bad request", status= 405)        
+
+def deleteBlog(request, sno):
+    if request.user.is_authenticated:
+        currentPath = request.META.get('HTTP_REFERER').split("127.0.0.1:8000")[1]
+        post = Post.objects.get(sno = sno)
+
+        if post is not None and post.user == request.user:
+            post.delete()
+            messages.success(request, "Your Post has been successfully deleted")
+            return redirect(currentPath)
+        
+        else:
+            messages.error(request, "cannot understand you request")
+            return redirect(currentPath) 
+        
+    return HttpResponse("very bad request", status= 405)
+
+
+
+
+
         
