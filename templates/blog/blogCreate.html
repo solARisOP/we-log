@@ -7,23 +7,28 @@
 {% block body %}
 <div class="container-fluid my-3" style="max-width: 1000px;">
     <h3 class="mb-4">Create your blog</h3>
-    <form method="POST" onsubmit="return postBlog(this)">
+    <form method="POST" onsubmit="return postBlog(this)" enctype="multipart/form-data">
         {% csrf_token %}
         <div class="mb-3">
-            <label for="title" class="form-label">Title</label>
+            <label for="title" class="form-label">Title:</label>
             <input type="text" class="form-control" id="title" name="title" aria-describedby="title" pattern=".*\S+.*"
                 required trim>
         </div>
         <div class="mb-3">
-            <label for="content" class="form-label">Content</label>
+            <label for="content" class="form-label">Content:</label>
             <textarea class="form-control" name="content" id="content" cols="30" rows="25" pattern=".*\S+.*" trim
                 required minlength="50">Write your thoughts/experiences/knowledge anything and everything</textarea>
         </div>
         <div class="mb-3">
-            <label for="desc" class="form-label">Description</label>
+            <label for="content" class="form-label">Image:</label>
+            <input type="file" class="form-control" name="avatar" id="avatar" accept="image/png, image/jpeg, image/jpg">
+        </div>
+        <div class="mb-3">
+            <label for="desc" class="form-label">Description:</label>
             <textarea class="form-control" name="desc" id="desc" cols="30" rows="5" pattern=".*\S+.*" trim required
                 minlength="15"></textarea>
         </div>
+
         <input type="text" id="blog" name = "blog" hidden>
 
         <button type="submit" class="btn btn-dark" >Submit</button>

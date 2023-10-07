@@ -12,13 +12,12 @@ function send_otp2() {
     const fname_ = fname.value
     const lname_ = lname.value
     const desc_ = desc.value
-    //avatar = document.getElementById('avatar').value
 
     const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
 
     fetch('/you/check', {
         method: 'POST',
-        body: JSON.stringify({ email: email_, fname: fname_, lname: lname_, desc: desc_ }),
+        body: JSON.stringify({ email: email_, fname: fname_, lname: lname_, desc: desc_}),
         headers: {
             'Content-Type': 'application/json',
             'X-CSRFToken': csrfToken,

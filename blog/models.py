@@ -1,7 +1,11 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.timezone import now
+from django.utils.text import slugify
 # Create your models here.
+
+def post_directory_path(instance, filename):
+    return f'post_{instance.sno}/{filename}'
 
 class Post(models.Model):
     sno = models.AutoField(primary_key=True)
@@ -9,11 +13,25 @@ class Post(models.Model):
     content = models.TextField()
     description = models.TextField(null=True, blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    slug = models.CharField(max_length=130)
+    slug = models.SlugField(unique=True, null=False)
     timeStamp = models.DateTimeField(default=now, blank=True)
+    avatar = models.ImageField(upload_to=post_directory_path, null=True, blank=True)
     
     def __str__(self):
-        return self.title + " by " + self.user.username
+        return self.title + " by " + self.user.username    
+    
+    def _generate_unique_slug(self):
+        unique_slug = slugify(f"{self.user.username}-{self.title}")
+        num = 1
+        while Post.objects.filter(slug=unique_slug).exists():
+            unique_slug = '{}-{}'.format(unique_slug, num)
+            num += 1
+        return unique_slug
+    
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = self._generate_unique_slug()
+        super().save(*args, **kwargs)
     
 class BlogComment(models.Model):
     sno = models.AutoField(primary_key=True)

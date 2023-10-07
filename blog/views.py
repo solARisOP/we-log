@@ -4,7 +4,6 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.contrib import messages
 from blog.templatetags import extras
 
-# Create your views here.
 def blogHome(request):
     allPosts = Post.objects.all()
     context = {'allPosts' : allPosts}
@@ -12,7 +11,7 @@ def blogHome(request):
 
 def blogPost(request, slug):
     try:
-        post = Post.objects.get(sno = slug)
+        post = Post.objects.get(slug = slug)
         comments = BlogComment.objects.filter(post = post, parent = None)
         replies = BlogComment.objects.filter(post = post).exclude(parent = None)
 
@@ -35,9 +34,9 @@ def postComment(request):
     if request.method=="POST":
         comment = request.POST["comment"]
         user = request.user
-        postSno = request.POST["postSno"]
+        slug = request.POST["postSlug"]
         parentSno = request.POST["parentSno"]
-        post =  Post.objects.get(sno = postSno)
+        post =  Post.objects.get(slug = slug)
         if parentSno == "":
             comment = BlogComment(comment = comment, user = user, post = post)
             messages.success(request, "comment posted successfully")
@@ -46,7 +45,7 @@ def postComment(request):
             comment = BlogComment(comment = comment, user = user, post = post, parent = parent)
             messages.success(request, "reply posted successfully")
         comment.save()
-    return redirect(f"/blog/{post.sno}") 
+    return redirect(f"/blog/{post.slug}") 
 
 def createBlog(request):
     if request.user.is_authenticated:
@@ -59,15 +58,22 @@ def postBlog(request):
         title = request.POST["title"]
         content = request.POST["blog"]
         description = request.POST["desc"]
-        post = Post.objects.create(title = title, content = content, description = description, user = request.user, slug = title)
+
+        if request.FILES.get('avatar'):
+            avatar = request.FILES['avatar']
+            post = Post.objects.create(title = title, content = content, description = description, user = request.user, avatar = avatar)
+
+        else:
+            post = Post.objects.create(title = title, content = content, description = description, user = request.user)
+
         post.save()
         messages.success(request, "You blog has been successfully posted")
         return redirect('/you')
     
-def updateView(request, sno):
+def updateView(request, slug):
     if request.user.is_authenticated:
         currentPath = request.META.get('HTTP_REFERER').split("127.0.0.1:8000")[1]
-        post = Post.objects.get(sno = sno)
+        post = Post.objects.get(slug = slug)
         if post is not None and post.user == request.user:
             context = {'post' : post}
             return render(request, "blog/blogUpdate.html", context)
@@ -82,13 +88,15 @@ def updateBlog(request):
         title = request.POST['utitle']
         content = request.POST['ublog']
         description = request.POST['udesc']
-        sno = request.POST['blogId']
+        slug = request.POST['blogId']
 
-        post = Post.objects.get(sno = sno)
+        post = Post.objects.get(slug = slug)
         if post is not None and post.user == request.user:
             post.title = title
             post.content = content
             post.description = description
+            if request.FILES.get('avatar'):
+                post.avatar = request.FILES['avatar']
             post.save()
             messages.success(request, "Your Post has been successfully updated")
             return redirect("/you")
@@ -98,10 +106,10 @@ def updateBlog(request):
         
     return HttpResponse("very bad request", status= 405)        
 
-def deleteBlog(request, sno):
+def deleteBlog(request, slug):
     if request.user.is_authenticated:
         currentPath = request.META.get('HTTP_REFERER').split("127.0.0.1:8000")[1]
-        post = Post.objects.get(sno = sno)
+        post = Post.objects.get(slug = slug)
 
         if post is not None and post.user == request.user:
             post.delete()
@@ -113,9 +121,4 @@ def deleteBlog(request, sno):
             return redirect(currentPath) 
         
     return HttpResponse("very bad request", status= 405)
-
-
-
-
-
         

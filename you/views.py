@@ -10,16 +10,12 @@ import random
 from email_validator import validate_email, EmailNotValidError
 import json
 from django.contrib import messages
-from django.contrib.auth import update_session_auth_hash, authenticate, login, logout
+from django.contrib.auth import authenticate, login, logout
 
 def profilePage(request):
     if request.user.is_authenticated:
         allPosts = Post.objects.filter(user = request.user)
-        try:
-            profile = UserProfile.objects.get(user = request.user)
-            context = {'profile' : profile, 'allPosts' : allPosts, 'user_' : request.user}
-        except ObjectDoesNotExist:
-            context = {'allPosts' : allPosts, 'user_' : request.user}
+        context = {'allPosts' : allPosts, 'user_' : request.user}
         return render(request, 'account/user_profile.html', context)
     else :
         return render(request, 'account/non_profile.html')
@@ -29,12 +25,14 @@ def profileEdit(request):
         fname= request.POST['fname']
         lname= request.POST['lname']
         desc = request.POST['desc']
-        # avatar = request.POST['avatar']
+        profile = UserProfile.objects.get(user = request.user)
+        if request.FILES.get('avatar'):
+            avatar = request.FILES['avatar']
+            profile.avatar = avatar
         user = User.objects.get(username = request.user.username)
         user.first_name = fname
         user.last_name = lname
         user.save()
-        profile, created = UserProfile.objects.get_or_create(user = request.user)
         profile.description = desc
         profile.save()
         return redirect('/you') 
@@ -43,13 +41,7 @@ def otpVerificater(request):
     if request.method == "POST":
         data = json.loads(request.body.decode('utf-8'))
         email = data.get('message', '')
-
-        # try:
-        #     emailinfo = validate_email(email)
-        #     email = emailinfo['email']
-
-        # except EmailNotValidError as e:
-        #     return JsonResponse({''})
+        
         currentPath = request.META.get('HTTP_REFERER').split("127.0.0.1:8000")[1]
         flag = User.objects.filter(email = email).exists()
         
@@ -87,7 +79,6 @@ def otpVerificater(request):
     
     return HttpResponse('very bad request', status=405)
 
-# when user is logged out
 def passwordReseter(request):
     if request.method == "POST":
         if request.user.is_authenticated == False:
@@ -123,7 +114,6 @@ def passwordReseter(request):
             if user is not None:
                 user.set_password(pass1)
                 user.save()
-                update_session_auth_hash(request, user)
                 messages.success(request, "Your password has successfully been changed")
             else:
                 messages.error(request, "wrong current password")
@@ -147,7 +137,6 @@ def checker(request):
                 
                 request.session['email'] = email
                 request.session['desc'] = data['desc']
-                # request.session['img'] = data['avatar']
                 request.session['fname'] = data['fname']
                 request.session['lname'] = data['lname']
                 request.session['currpath'] = request.META.get('HTTP_REFERER').split("127.0.0.1:8000")[1]
@@ -201,7 +190,6 @@ def handleSignup(request):
         pass1= request.POST['createpass1']
         pass2= request.POST['createpass2']
         desc = request.session['desc']
-        # avatar = request.session['avatar']
 
         if not username.isalnum():
             messages.error(request, "username must contain only aphabets and numbers")
@@ -251,3 +239,38 @@ def handleLogout(request):
         return redirect(currentPath)
     else:
         return HttpResponse('Invalid request', status=404)
+    
+def follow(request, username):
+    if request.user.is_authenticated:
+        currentPath = request.META.get('HTTP_REFERER').split("127.0.0.1:8000")[1]
+        profile_a = UserProfile.objects.get(user = request.user)
+
+        user_ = User.objects.get(username = username)
+        profile_b = UserProfile.objects.get(user = user_)
+
+        profile_a.following.add(user_)
+        profile_b.followers.add(request.user)
+
+        profile_a.save()
+        profile_b.save()
+
+        return redirect(currentPath)
+    return HttpResponse('sorry cannot understand your request', status=404)
+
+def unFollow(request, username):
+
+    if request.user.is_authenticated:
+        currentPath = request.META.get('HTTP_REFERER').split("127.0.0.1:8000")[1]
+        profile_a = UserProfile.objects.get(user = request.user)
+
+        user_ = User.objects.get(username = username)
+        profile_b = UserProfile.objects.get(user = user_)
+
+        profile_a.following.remove(user_)
+        profile_b.followers.remove(request.user)
+
+        profile_a.save()
+        profile_b.save()
+
+        return redirect(currentPath)
+    return HttpResponse('sorry cannot understand your request', status=404)

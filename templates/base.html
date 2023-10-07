@@ -113,11 +113,6 @@
                             <input type="email" class="form-control" id="email" name="email"
                                 placeholder="name@example.com" required>
                         </div>
-                        <div class="mb-3">
-                            <label for="avatar" class="form-label">Profile image</label>
-                            <input type="file" class="form-control" id="avatar" name="avatar"
-                                accept="image/png, image/jpeg, image/jpg" />
-                        </div>
                         <div class="mb-2">
                             <label for="desc" class="form-label">Profile description</label>
                             <textarea class="form-control" name="desc" id="desc" cols="30" rows="7"></textarea>
@@ -229,11 +224,11 @@
                                 <input type="password" class="form-control" id="loginpassword" name="loginpassword"
                                     placeholder="Enter your password" pattern="^\S+$" minlength="8" maxlength="15"
                                     required>
-                                <div class="text-end mt-2"><a
-                                        class="link-opacity-75 link-underline-opacity-0 link-underline-opacity-100-hover link-dark link-opacity-100-hover"
+                                <div class="text-end mt-2">
+                                    <a class="link-opacity-75 link-underline-opacity-0 link-underline-opacity-100-hover link-dark link-opacity-100-hover"
                                         role="button" id="forgetpass" data-bs-toggle="modal"
-                                        data-bs-target="#otpverifModal">Forgot
-                                        Password</a></div>
+                                        data-bs-target="#otpverifModal">ForgotPassword</a>
+                                </div>
                             </div>
                             <button type="submit" class="btn btn-dark mb-2">Submit</button>
                         </form>

@@ -11,7 +11,7 @@
     <h3 class="mb-4">Create your blog</h3>
     <form method="POST" onsubmit="return updateBlog(this)">
         {% csrf_token %}
-        <input type="number" name="blogId" hidden  value={{post.sno}}>
+        <input type="number" name="blogId" hidden  value={{post.slug}}>
         <div class="mb-3">
             <label for="utitle" class="form-label">Title</label>
             <input type="text" class="form-control" id="utitle" name="utitle" aria-describedby="title" pattern=".*\S+.*" value = {{post.title}}
@@ -21,6 +21,10 @@
             <label for="ucontent" class="form-label">Content</label>
             <textarea class="form-control" name="ucontent" id="ucontent" cols="30" rows="25" pattern=".*\S+.*" trim
                 required minlength="50">{{post.content|safe}}</textarea>
+        </div>
+        <div class="mb-3">
+            <label for="content" class="form-label">Image:</label>
+            <input type="file" class="form-control" name="uavatar" id="uavatar" accept="image/png, image/jpeg, image/jpg">
         </div>
         <div class="mb-3">
             <label for="udesc" class="form-label">Description</label>

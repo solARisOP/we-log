@@ -11,7 +11,7 @@
 {% load extras %}
 <div class="container-fluid my-3 mb-5" style="max-width: 1000px;">
     <h1 class="blog-post-title">{{post.title}}</h1>
-    <p class="blog-post-meta">{{post.timeStamp}} by <a href="/account/{{post.user.username}}">{{post.user.username}}</a></p>
+    <p class="blog-post-meta">{{post.timeStamp}} by <a class="link-opacity-75 link-underline-opacity-0 link-underline-opacity-100-hover link-dark link-opacity-100-hover" href="/account/{{post.user.username}}">{{post.user.username}}</a></p>
 
     <p class="text-break" >{{post.content|safe}}</p>
     <hr>
@@ -29,7 +29,7 @@
                     pattern=".*\S.*" trim required>
                 <input type="hidden" name="parentSno" value="">
             </div>
-            <input type="hidden" name="postSno" value={{post.sno}}>
+            <input type="hidden" name="postSlug" value={{post.slug}}>
             <button type="submit" class="btn btn-dark">Submit</button>
         </form>
         {% else %}
@@ -70,7 +70,7 @@
                                     placeholder="Enter reply here" pattern=".*\S.*" trim required>
                                 <input type="hidden" name="parentSno" value={{comment.sno}}>
                             </div>
-                            <input type="hidden" name="postSno" value={{post.sno}}>
+                            <input type="hidden" name="postSlug" value={{post.slug}}>
                             <button type="submit" class="btn btn-dark btn-sm">Submit</button>
                         </form>
                     </div>

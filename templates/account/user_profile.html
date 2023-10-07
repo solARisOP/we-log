@@ -2,7 +2,11 @@
 
 {% block title %}profile{% endblock title %}
 
-{% block youactive %} active {% endblock youactive %}
+{% comment %} {% if user.id == user_.id %}
+{% block youactive %} active {% endblock youactive %} 
+{% else %}
+{% block authoractive %} active {% endblock authoractive %}
+{% endif %} {% endcomment %}
 
 {% block search %}none{% endblock search %}
 
@@ -12,17 +16,34 @@
         <div class="row d-flex justify-content-center align-items-center h-100">
             <div class="col col-lg-9 col-xl-7">
                 <div class="card">
-                    <div class="rounded-top text-white d-flex flex-row"
-                        style="background-color: #000; height:200px;">
+                    <div class="rounded-top text-white d-flex flex-row" style="background-color: #000; height:200px;">
                         <div class="ms-4 mt-5 d-flex flex-column" style="width: 150px;">
-                            <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-profiles/avatar-1.webp"
-                                alt="Generic placeholder image" class="img-fluid img-thumbnail mt-4 mb-2"
-                                style="width: 150px; z-index: 1">
+                            <div class="mt-2 d-flex align-items-center justify-content-center bg-black" style=" z-index: 1; height: 170px !important; width: inherit !important; border-radius: 4%;">
+                                {% if user_.userprofile.avatar %}
+                                <img src={{user_.userprofile.avatar.url}}
+                                    alt="/static/img/user.png" class="img-fluid"
+                                    style="z-index: 1; height:inherit !important; width:inherit !important; object-fit: contain !important; border-radius: 4%;">
+                                {% else %}
+                                <img src="/static/img/user.png"
+                                    alt="user" class="img-fluid img-thumbnail"
+                                    style="z-index: 1; height:inherit !important; width:inherit !important;">
+                                {% endif %}
+                            </div>
                             {% if user == user_ %}
-                            <button type="button" class="btn btn-outline-dark mb-5" data-bs-toggle="modal"
+                            <button type="button" class="btn btn-outline-dark mt-2" data-bs-toggle="modal"
                                 data-bs-target="#editModal" data-mdb-ripple-color="dark" style="z-index: 1;">
                                 Edit Profile
                             </button>
+                            {% elif user.is_authenticated %}
+                            {% if x == '1' %}
+                                <a role="button" class="btn btn-outline-dark mt-2" style="z-index: 1;" href="/you/unfollow/{{user_.username}}">
+                                    Unfollow
+                                </a>
+                            {% else %}
+                                <a role="button" class="btn btn-dark mt-2" style="z-index: 1;" href="/you/follow/{{user_.username}}">
+                                    Follow
+                                </a>
+                            {% endif %}
                             {% endif %}
                         </div>
                         <div class="ms-3" style="margin-top: 130px;">
@@ -32,25 +53,25 @@
                     </div>
                     <div class="p-4 text-black" style="background-color: #f8f9fa;">
                         <div class="d-flex justify-content-end text-center py-1">
-                            <div>
-                                <p class="mb-1 h5">253</p>
+                            <div class="mx-2">
+                                <p class="mb-1 h5">{{user_.post_set.count}}</p>
                                 <p class="small text-muted mb-0">Blogs</p>
                             </div>
-                            <div class="px-3">
-                                <p class="mb-1 h5">1026</p>
+                            <div class="mx-2" onclick="" role="button">
+                                <p class="mb-1 h5">{{user_.followers.count}}</p>
                                 <p class="small text-muted mb-0">Followers</p>
                             </div>
-                            <div>
-                                <p class="mb-1 h5">478</p>
+                            <div class="mx-2" onclick="" role="button"> 
+                                <p class="mb-1 h5">{{user_.following.count}}</p>
                                 <p class="small text-muted mb-0">Following</p>
                             </div>
                         </div>
                     </div>
                     <div class="card-body p-4 text-black">
-                        {% if profile.description|length < 1 %} {% else %} <div class="mb-3">
+                        {% if user_.userprofile.description|length < 1 %} {% else %} <div class="mb-3">
                             <p class="lead fw-normal mb-1 fs-4 ps-1">About</p>
                             <div class="p-4 text-break" style="background-color: #f8f9fa;">
-                                <p class="font-italic mb-1">{{profile.description}}</p>
+                                <p class="font-italic mb-1">{{user_.userprofile.description}}</p>
                             </div>
                     </div>
                     {% endif %}
@@ -64,7 +85,7 @@
                     </div>
                     {% endif %}
 
-                    {% if allPosts|length < 1 %} {% else %} <div
+                    {% if allPosts.count < 1 %} {% else %} <div
                         class="d-flex justify-content-between align-items-center mb-1 px-1">
                         <p class="lead fw-normal fs-4 mb-0">Blogs</p>
                 </div>
@@ -78,13 +99,13 @@
                             style="right :35px; top:30px;" data-bs-toggle="dropdown" aria-expanded="false"></i>
                         <ul class="dropdown-menu">
                             <li>
-                                <a class="dropdown-item" role="button" href="/blog/update/{{post.sno}}">
+                                <a class="dropdown-item" role="button" href="/blog/update/{{post.slug}}">
                                     <i class="fas fa-pen mx-2"></i> Update
                                 </a>
                             </li>
                             <li>
                                 <a class="dropdown-item pe-auto" role="button" onclick="delConfirm(this)"
-                                    data-slug={{post.sno}} id="del-post">
+                                    data-slug={{post.slug}} id="del-post">
                                     <i class="fas fa-trash mx-2"></i> Delete
                                 </a>
                             </li>
@@ -93,13 +114,13 @@
                         {% endif %}
                         <strong class="d-inline-block mb-2 text-dark">Article by {{user_.username}}</strong>
                         <h3 class="mb-0"><a class="text-decoration-none text-dark"
-                                href="/blog/{{post.sno}}">{{post.title}}</a></h3>
+                                href="/blog/{{post.slug}}">{{post.title}}</a></h3>
                         <div class="mb-1 text-muted">{{post.timeStamp}}</div>
                         <p class="card-text mb-auto">
                         <div class="preview">{{post.description|truncatechars:500}}</div>
                         </p>
                         <div class="my-2">
-                            <a href="/blog/{{post.sno}}" role="button" class="btn btn-dark">Continue
+                            <a href="/blog/{{post.slug}}" role="button" class="btn btn-dark">Continue
                                 reading</a>
 
                         </div>
@@ -124,7 +145,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="/you/profileEdit" method="POST">
+                <form action="/you/profileEdit" method="POST" enctype="multipart/form-data" onsubmit="return imgSize()">
                     {% csrf_token %}
                     <div class="mb-3">
                         <label for="fname" class="form-label">First Name</label>
@@ -136,15 +157,19 @@
                         <input type="text" class="form-control" id="lname" name="lname" placeholder="last name"
                             minlength="1" pattern=".*\S+.*" value={{user.last_name}} trim required>
                     </div>
-                    <div class="mb-3">
-                        <label for="avatar" class="form-label">Profile image</label>
+                    <div class="mb-3 text-break">
+                        <label for="avatar" class="form-label">Profile image </label>
+                        {% if user.userprofile.avatar %}
+                        <a href="{{user.userprofile.avatar.url}}" class="text-dark">{{user.userprofile.avatar}}</a>
+                        {% else %}
+                        {% endif %}
                         <input type="file" class="form-control" id="avatar" name="avatar"
                             accept="image/png, image/jpeg, image/jpg" />
                     </div>
                     <div class="mb-2">
                         <label for="desc" class="form-label">Profile description</label>
                         <textarea class="form-control" name="desc" id="desc" cols="30"
-                            rows="7">{{profile.description}}</textarea>
+                            rows="7">{{user.userprofile.description}}</textarea>
                     </div>
                     <button type="submit" class="btn btn-dark my-2">Submit</button>
                 </form>
@@ -164,5 +189,20 @@
             document.location = `/blog/delete/${link}`;
         }
     }
+    var imgSize = ()=>{
+        var img = document.getElementById('avatar');
+        if (img.files.length > 0) {
+            var fileSize = img.files[0].size; // Get the file size in bytes
+            var maxSize = 10 * 1024 * 1024; 
+
+            if(fileSize > maxSize)
+            {
+                alert("image file size exceeds the maximum allowed size (10 MB).");
+                return false;
+            }
+            return true;
+        }
+    }
+    
 </script>
 {% endblock js %}

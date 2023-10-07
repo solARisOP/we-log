@@ -17,13 +17,21 @@ def authorProfile(request, slug):
     user_ = User.objects.get(username = slug)
     if request.user.is_authenticated and request.user == user_:
         return redirect('/you')
+    
     allPosts = Post.objects.filter(user = user_)
-    try:
-        profile = UserProfile.objects.get(user = user_)
-        context = {'profile' : profile, 'allPosts' : allPosts, 'user_' : user_}
-    except ObjectDoesNotExist:
+    if request.user.is_authenticated:
+        profile = UserProfile.objects.get(user = request.user)
+        followers = user_.followers.all()
+        if profile in followers:
+            x = '1'
+        else:
+            x = '0'
+        context = {'x' : x, 'allPosts' : allPosts, 'user_' : user_}
+    else:
         context = {'allPosts' : allPosts, 'user_' : user_}
+
     return render(request, 'account/user_profile.html', context)
+    
 
 def contact(request):
     if request.method == "POST":
