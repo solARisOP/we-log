@@ -6,12 +6,18 @@
 
 {% block search %}flex{% endblock search %}
 
+{% block searchquery %}query{% endblock searchquery %}
+
+{% block searchholder %}Blogs{% endblock searchholder %}
+
+{% block searchloc %}{% url 'searchBlog' %}{% endblock searchloc %}
+
 {% block body %}
 {% load humanize %}
 {% load extras %}
 <div class="container-fluid my-3 mb-5" style="max-width: 1000px;">
     <h1 class="blog-post-title">{{post.title}}</h1>
-    <p class="blog-post-meta">{{post.timeStamp}} by <a class="link-opacity-75 link-underline-opacity-0 link-underline-opacity-100-hover link-dark link-opacity-100-hover" href="/account/{{post.user.username}}">{{post.user.username}}</a></p>
+    <p class="blog-post-meta">{{post.timeStamp}} by <a class="link-opacity-75 link-underline-opacity-0 link-underline-opacity-100-hover link-dark link-opacity-100-hover" href={% url 'authorProfile' post.user.username %}>{{post.user.username}}</a></p>
 
     <p class="text-break" >{{post.content|safe}}</p>
     <hr>
@@ -21,7 +27,7 @@
     <h2>Comments ({{comments.count}})</h2>
     <div class="my-2">
         {% if user.is_authenticated %}
-        <form method="POST" action="/blog/postComment">
+        <form method="POST" action="{% url 'postComment' %}">
             {% csrf_token %}
             <div class="mb-3">
                 <label for="comment" class="form-label">Post Comment</label>
@@ -62,7 +68,7 @@
 
                 <div class="collapse" id="replyBox{{comment.sno}}">
                     <div class="mt-1">
-                        <form method="POST" action="/blog/postComment">
+                        <form method="POST" action="{% url 'postComment' %}">
                             {% csrf_token %}
                             <div class="mb-3">
                                 <label for="comment" class="form-label">Post Reply</label>

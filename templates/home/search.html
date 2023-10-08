@@ -26,7 +26,7 @@
             <div class="mb-1 text-muted">{{post.timeStamp}}</div>
             <p class="card-text mb-auto">{{post.description | truncatechars:500}}</p>
             <div class="my-2">
-                <a href="/blog/{{post.sno}}" role="button" class="btn btn-dark">Continue reading</a>
+                <a href={% url 'blogPost' %} role="button" class="btn btn-dark">Continue reading</a>
 
             </div>
         </div>

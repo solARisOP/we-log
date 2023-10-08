@@ -14,7 +14,7 @@
     <body>
         <nav class="navbar navbar-expand-xxl sticky-top navbar-dark bg-black py-3">
             <div class="container-fluid">
-                <a class="navbar-brand" href="/">weLog</a>
+                <a class="navbar-brand" href={% url 'home' %}>weLog</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                     aria-expanded="false" aria-label="Toggle navigation">
@@ -24,28 +24,28 @@
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item mx-2">
                             <a class="nav-link {% block homeactive %}{% endblock homeactive %}" aria-current="page"
-                                href="/">Home</a>
+                            href={% url 'home' %}>Home</a>
                         </li>
                         <li class="nav-item mx-2">
                             <a class="nav-link {% block youactive %}{% endblock youactive %}" aria-current="page"
-                                href="/you">You</a>
+                                href={% url 'profilePage' %}>You</a>
                         </li>
                         <li class="nav-item mx-2">
-                            <a class="nav-link {% block blogactive %}{% endblock blogactive %}" href="/blog">Blog</a>
+                            <a class="nav-link {% block blogactive %}{% endblock blogactive %}" href={% url 'blogHome' %}>Blog</a>
                         </li>
                         <li class="nav-item mx-2">
                             <a class="nav-link {% block authoractive %}{% endblock authoractive %}"
-                                href="/account">UA</a>
+                                href={% url 'accounts' %}>UA</a>
                         </li>
                         <li class="nav-item mx-2">
                             <a class="nav-link {% block contactactive %}{% endblock contactactive %}"
-                                href="/contact">Contact</a>
+                                href={% url 'contact' %}>Contact</a>
                         </li>
                     </ul>
-                    <form method="GET" action="/search" style="display : {% block search %}{% endblock search %};"
+                    <form method="GET" action="{% block searchloc %} {% endblock searchloc %}" style="display : {% block search %}{% endblock search %};"
                         role="search">
-                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"
-                            name="query" id="search">
+                        <input class="form-control me-2" type="search" placeholder="{% block searchholder %} {% endblock searchholder %}" aria-label="Search"
+                            name="{% block searchquery %} {% endblock searchquery %}" id="search">
                         <button class="btn btn-outline-dark me-2 text-white" type="submit">Search</button>
                     </form>
                     {% if user.is_authenticated %}
@@ -56,7 +56,7 @@
                                 Welcome {{request.user}}
                             </a>
                             <div class="dropdown-menu">
-                                <a class="dropdown-item" href="/you/logout">Logout </a>
+                                <a class="dropdown-item" href={% url 'handleLogout' %}>Logout </a>
                                 <a id="userpassreset" class="dropdown-item" role="button" data-bs-toggle="modal"
                                     data-bs-target="#passresetModal">Reset Password</a>
                             </div>
@@ -96,7 +96,7 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                    <form action="/you/check" method="POST" id="signupForm-1">
+                    <form action="{% url 'checker' %}" method="POST" id="signupForm-1">
                         {% csrf_token %}
                         <div class="mb-3">
                             <label for="fname" class="form-label">First Name</label>
@@ -136,7 +136,6 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body" id="otp-verif-form">
-                        {% comment %} <form></form> {% endcomment %}
                             <div id="otpblock" style="display : block;">
                                 <div class="mb-2">
                                     <label for="signup-otp" class="form-label">OTP</label>
@@ -169,7 +168,7 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <form action="/you/signup" method="POST" id="myForm">
+                        <form action="{% url 'handleSignup' %}" method="POST" id="myForm">
                             {% csrf_token %}
                             <div class="mb-3">
                                 <label for="createusername" class="form-label">Username</label>
@@ -211,7 +210,7 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <form action="/you/login" method='POST'>
+                        <form action="{% url 'handleLogin' %}" method='POST'>
                             {% csrf_token %}
                             <div class="mb-3">
                                 <label for="username" class="form-label">Username</label>
@@ -281,7 +280,7 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <form action="/you/passreset" method='POST' id="PrForm">
+                        <form action="{% url 'passwordReseter' %}" method='POST' id="PrForm">
                             {% csrf_token %}
                             <div style="display : none" id="curr-password">
                                 <div class="mb-3">

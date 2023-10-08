@@ -2,11 +2,17 @@
 
 {% block title %}profile{% endblock title %}
 
-{% comment %} {% if user.id == user_.id %}
-{% block youactive %} active {% endblock youactive %} 
-{% else %}
-{% block authoractive %} active {% endblock authoractive %}
-{% endif %} {% endcomment %}
+{% block youactive %} 
+{% if user.id == user_.id %}
+active 
+{% endif %}
+{% endblock youactive %} 
+
+{% block authoractive %}
+{% if user.id != user_.id %}
+active 
+{% endif %}
+{% endblock authoractive %}
 
 {% block search %}none{% endblock search %}
 
@@ -36,11 +42,11 @@
                             </button>
                             {% elif user.is_authenticated %}
                             {% if x == '1' %}
-                                <a role="button" class="btn btn-outline-dark mt-2" style="z-index: 1;" href="/you/unfollow/{{user_.username}}">
+                                <a role="button" class="btn btn-outline-dark mt-2" style="z-index: 1;" href={% url 'unFollow' user_.username %}>
                                     Unfollow
                                 </a>
                             {% else %}
-                                <a role="button" class="btn btn-dark mt-2" style="z-index: 1;" href="/you/follow/{{user_.username}}">
+                                <a role="button" class="btn btn-dark mt-2" style="z-index: 1;" href={% url 'follow' user_.username %}>
                                     Follow
                                 </a>
                             {% endif %}
@@ -48,23 +54,27 @@
                         </div>
                         <div class="ms-3" style="margin-top: 130px;">
                             <h5>{{user_.first_name}} {{user_.last_name}}</h5>
-                            <p>@{{user_}}</p>
+                            <p>@{{user_.username}}</p>
                         </div>
                     </div>
                     <div class="p-4 text-black" style="background-color: #f8f9fa;">
                         <div class="d-flex justify-content-end text-center py-1">
-                            <div class="mx-2">
+                            <div class="mx-2" onclick="location.href='#blogs-section';" role="button">
                                 <p class="mb-1 h5">{{user_.post_set.count}}</p>
                                 <p class="small text-muted mb-0">Blogs</p>
                             </div>
-                            <div class="mx-2" onclick="" role="button">
-                                <p class="mb-1 h5">{{user_.followers.count}}</p>
-                                <p class="small text-muted mb-0">Followers</p>
-                            </div>
-                            <div class="mx-2" onclick="" role="button"> 
-                                <p class="mb-1 h5">{{user_.following.count}}</p>
-                                <p class="small text-muted mb-0">Following</p>
-                            </div>
+                            <a href={% url 'accounts' user_.username "followers" %} class="text-decoration-none text-dark mx-2"  role="button">
+                                <div>
+                                    <p class="mb-1 h5">{{user_.followers.count}}</p>
+                                    <p class="small text-muted mb-0">Followers</p>
+                                </div>
+                            </a>
+                            <a href={% url 'accounts' user_.username "following" %} class="text-decoration-none text-dark mx-2"  role="button">
+                                <div> 
+                                    <p class="mb-1 h5">{{user_.following.count}}</p>
+                                    <p class="small text-muted mb-0">Following</p>
+                                </div>
+                            </a>
                         </div>
                     </div>
                     <div class="card-body p-4 text-black">
@@ -79,7 +89,7 @@
                     {% if user == user_ %}
                     <div class="my-3 d-flex flex-column" style="width: 150px;">
                         <a type="button" class="btn btn-outline-dark" data-mdb-ripple-color="dark" style="z-index: 1;"
-                            href="/blog/createblog">
+                            href={% url 'createBlog' %}>
                             + Create Blog
                         </a>
                     </div>
@@ -87,7 +97,7 @@
 
                     {% if allPosts.count < 1 %} {% else %} <div
                         class="d-flex justify-content-between align-items-center mb-1 px-1">
-                        <p class="lead fw-normal fs-4 mb-0">Blogs</p>
+                        <p class="lead fw-normal fs-4 mb-0" id="blogs-section">Blogs</p>
                 </div>
                 {% endif %}
                 {% for post in allPosts %}
@@ -99,7 +109,7 @@
                             style="right :35px; top:30px;" data-bs-toggle="dropdown" aria-expanded="false"></i>
                         <ul class="dropdown-menu">
                             <li>
-                                <a class="dropdown-item" role="button" href="/blog/update/{{post.slug}}">
+                                <a class="dropdown-item" role="button" href={% url 'updateView' post.slug %}>
                                     <i class="fas fa-pen mx-2"></i> Update
                                 </a>
                             </li>
@@ -120,7 +130,7 @@
                         <div class="preview">{{post.description|truncatechars:500}}</div>
                         </p>
                         <div class="my-2">
-                            <a href="/blog/{{post.slug}}" role="button" class="btn btn-dark">Continue
+                            <a href={% url 'blogPost' post.slug %} role="button" class="btn btn-dark">Continue
                                 reading</a>
 
                         </div>
@@ -145,7 +155,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="/you/profileEdit" method="POST" enctype="multipart/form-data" onsubmit="return imgSize()">
+                <form action="{% url 'profileEdit' %}" method="POST" enctype="multipart/form-data" onsubmit="return imgSize()">
                     {% csrf_token %}
                     <div class="mb-3">
                         <label for="fname" class="form-label">First Name</label>
@@ -160,7 +170,7 @@
                     <div class="mb-3 text-break">
                         <label for="avatar" class="form-label">Profile image </label>
                         {% if user.userprofile.avatar %}
-                        <a href="{{user.userprofile.avatar.url}}" class="text-dark">{{user.userprofile.avatar}}</a>
+                        <a href="{{user.userprofile.avatar.url}}" class="text-dark" target="_blank">{{user.userprofile.avatar}} </a>
                         {% else %}
                         {% endif %}
                         <input type="file" class="form-control" id="avatar" name="avatar"
@@ -181,28 +191,5 @@
 {% endblock body %}
 
 {% block js %}
-<script>
-    var delConfirm = (blogp) => {
-        let response = confirm("Are you sure you want to delete this Post, This action is irreversible");
-        if (response) {
-            var link = blogp.dataset.slug;
-            document.location = `/blog/delete/${link}`;
-        }
-    }
-    var imgSize = ()=>{
-        var img = document.getElementById('avatar');
-        if (img.files.length > 0) {
-            var fileSize = img.files[0].size; // Get the file size in bytes
-            var maxSize = 10 * 1024 * 1024; 
-
-            if(fileSize > maxSize)
-            {
-                alert("image file size exceeds the maximum allowed size (10 MB).");
-                return false;
-            }
-            return true;
-        }
-    }
-    
-</script>
+<script src="/static/user_profile.js"></script>
 {% endblock js %}

@@ -9,7 +9,7 @@
 {% block body %}
 <div class="container-fluid my-3" style="max-width: 1000px;" >
     <h3 class="mb-4">Contact weLog Admin</h3>
-    <form method = "POST" action="/contact">
+    <form method = "POST" action="{% url 'contact' %}">
         {% csrf_token %}
         {% if user.is_authenticated %}
         {% else %}

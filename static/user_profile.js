@@ -1,75 +1,21 @@
-// var delConfirm = (blogp) => {
-//     let response = confirm("Are you sure you want to delete this Post, This action is irreversible");
-//     if (response) {
-//         var link = blogp.dataset.slug;
-//         document.location = `/blog/delete/${link}`;
-//     }
-// }
+var delConfirm = (blogp) => {
+    let response = confirm("Are you sure you want to delete this Post, This action is irreversible");
+    if (response) {
+        var link = blogp.dataset.slug;
+        document.location = `/blog/delete/${link}`;
+    }
+}
+var imgSize = ()=>{
+    var img = document.getElementById('avatar');
+    if (img.files.length > 0) {
+        var fileSize = img.files[0].size; // Get the file size in bytes
+        var maxSize = 5 * 1024 * 1024; 
 
-// var unfollowButton = document.getElementById('unfollow-Button');
-// var followButton = document.getElementById('follow-Button');
-
-// document.addEventListener('DOMContentLoaded', ()=>{
-//     unfollowButton.hide();
-//     followButton.hide();
-
-//     if ({{user.is_authenticated}})
-//     {
-//         if({{user.following}} == {{user_}})
-//         {
-//             unfollowButton.show();
-//         }
-//         else
-//         {
-//             followButton.show();
-//         }
-//     }
-// });
-
-// var unFollow = () =>{
-//     unfollowButton.disabled = true;
-
-//     fetch('/you/unfollow', {
-//         method: 'POST',
-//         body: JSON.stringify({ username: {{user_.username}} }),
-//         headers: {
-//             'Content-Type': 'application/json',
-//             'X-CSRFToken': csrfToken,
-//         },
-//     })
-//         .then((response) => response.json())
-//         .then((data) => {
-//             unfollowButton.disabled = false;
-//             unfollowButton.hide();
-//             followButton.show();
-//             return true;
-//         }
-//         .catch((error) => {
-//             console.error('Error:', error);
-//             return false;
-//         });
-// }
-
-// var Follow = () =>{
-//     followButton.disabled = true;
-
-//     fetch('/you/follow', {
-//         method: 'POST',
-//         body: JSON.stringify({ username: {{user_.username}} }),
-//         headers: {
-//             'Content-Type': 'application/json',
-//             'X-CSRFToken': csrfToken,
-//         },
-//     })
-//         .then((response) => response.json())
-//         .then((data) => {
-//             followButton.disabled = false;
-//             followButton.hide();
-//             unfollowButton.show();
-//             return true;
-//         }
-//         .catch((error) => {
-//             console.error('Error:', error);
-//             return false;
-//         });
-// }
+        if(fileSize > maxSize)
+        {
+            alert("image file size exceeds the maximum allowed size (5 MB).");
+            return false;
+        }
+        return true;
+    }
+}
