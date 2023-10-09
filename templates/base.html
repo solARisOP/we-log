@@ -56,9 +56,10 @@
                                 Welcome {{request.user}}
                             </a>
                             <div class="dropdown-menu">
-                                <a class="dropdown-item" href={% url 'handleLogout' %}>Logout </a>
-                                <a id="userpassreset" class="dropdown-item" role="button" data-bs-toggle="modal"
+                                <a class="dropdown-item my-1" href={% url 'notificationPage' %}>Notifications</a>
+                                <a id="userpassreset" class="dropdown-item my-1" role="button" data-bs-toggle="modal"
                                     data-bs-target="#passresetModal">Reset Password</a>
+                                <a class="dropdown-item my-1" href={% url 'handleLogout' %}>Logout </a>
                             </div>
                         </li>
                     </ul>

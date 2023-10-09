@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils.timezone import now
 from django.utils.text import slugify
+import random, string
 # Create your models here.
 
 def post_directory_path(instance, filename):
@@ -40,5 +41,21 @@ class BlogComment(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True)
     timestamp = models.DateTimeField(default=now)
+    slug = models.SlugField(null=True)
+
     def __str__(self):
         return self.comment[0:15] + "..." + " by " + self.user.username
+    
+    def _generate_unique_slug(self):
+        unique_slug = ''.join(random.choices(string.ascii_letters+string.digits, k=7))
+
+        while BlogComment.objects.filter(slug=unique_slug).exists():
+            unique_slug = ''.join(random.choices(string.ascii_letters+string.digits, k=7))
+
+        return unique_slug
+    
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = self._generate_unique_slug()
+            
+        super().save(*args, **kwargs)

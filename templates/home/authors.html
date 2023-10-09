@@ -53,12 +53,12 @@ Users and Authors
                     {% endif %}
                 </div>
                 <div class="d-flex" style="background-color: #e6e6e6;">
-                    <div class="card-body pt-1">
-                        <p class="mb-1 fs-4">{{user_.username}}</p>
+                    <div class="card-body pt-1 pb-1 text-break" style="vertical-align:middle;">
+                        <p class="mb-0 fs-5">{{user_.username}}</p>
                         <p class="my-0">{{user_.first_name}} {{user_.last_name}}</p>
                         
                     </div>
-                    <div class="p-4" style="z-index : 1;">
+                    <div class="pt-2 pb-2 ps-2 d-flex align-items-center pe-3" style="z-index : 1;">
                                 <a role="button" class="btn btn-md btn-dark"
                                     href={% url 'authorProfile' user_.username %}>Profile</a>
                     </div>
@@ -91,12 +91,12 @@ Users and Authors
                     {% endif %}
                 </div>
                 <div class="d-flex" style="background-color: #e6e6e6;">
-                    <div class="card-body pt-1">
-                        <p class="mb-1 fs-4">{{profile.user.username}}</p>
+                    <div class="card-body pt-1 pb-1 text-break" style="vertical-align:middle;">
+                        <p class="mb-0 fs-5">{{profile.user.username}}</p>
                         <p class="my-0">{{profile.user.first_name}} {{profile.user.last_name}}</p>
                         
                     </div>
-                    <div class="p-4" style="z-index : 1;">
+                    <div class="pt-2 pb-2 ps-2 d-flex align-items-center pe-3" style="z-index : 1;">
                                 <a role="button" class="btn btn-md btn-dark"
                                     href={% url 'authorProfile' profile.user.username %}>Profile</a>
                     </div>

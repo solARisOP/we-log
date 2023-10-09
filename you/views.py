@@ -11,6 +11,9 @@ from email_validator import validate_email, EmailNotValidError
 import json
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
+from you.models import Notification
+from django.urls import reverse
+from django.db.models import Q
 
 def profilePage(request):
     if request.user.is_authenticated:
@@ -236,7 +239,7 @@ def handleLogout(request):
         currentPath = request.META.get('HTTP_REFERER').split("127.0.0.1:8000")[1]
         logout(request)
         messages.success(request, "Successfully logged Out")
-        return redirect(currentPath)
+        return redirect(reverse("home"))
     else:
         return HttpResponse('Invalid request', status=404)
     
@@ -253,6 +256,8 @@ def follow(request, username):
 
         profile_a.save()
         profile_b.save()
+
+        notify = Notification.objects.create(user = profile_b.user, link = reverse('authorProfile', kwargs={'username' : profile_a.user.username}), description = f"{profile_a.user.username} has started following you")
 
         return redirect(currentPath)
     return HttpResponse('sorry cannot understand your request', status=404)
@@ -274,3 +279,21 @@ def unFollow(request, username):
 
         return redirect(currentPath)
     return HttpResponse('sorry cannot understand your request', status=404)
+
+def notificationPage(request):
+    if request.user.is_authenticated:
+        Notification.objects.filter(user = request.user, status = Notification.CURRENT).update(status = Notification.READ)
+        Notification.objects.filter(user = request.user, status = Notification.NEW).update(status = Notification.CURRENT)
+        notifications = Notification.objects.filter(user = request.user)
+        context = {'notifications' : notifications}
+        return render(request, "account/notifications.html", context)
+        
+    return HttpResponse("Sorry could not understand you request", status = 404)
+
+def notificationDelete(request):
+    if request.user.is_authenticated and request.method == "POST":
+        Notification.objects.filter(Q(status = Notification.CURRENT) | Q(status = Notification.READ), user = request.user).delete()
+        return render(request, 'account/notifications.html')
+    return HttpResponse("Sorry could not understand you request", status = 404)
+
+

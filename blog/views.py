@@ -3,6 +3,8 @@ from blog.models import Post, BlogComment
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib import messages
 from blog.templatetags import extras
+from django.urls import reverse
+from you.models import Notification
 
 def blogHome(request):
     allPosts = Post.objects.all()
@@ -45,6 +47,10 @@ def postComment(request):
             comment = BlogComment(comment = comment, user = user, post = post, parent = parent)
             messages.success(request, "reply posted successfully")
         comment.save()
+
+        if request.user != post.user:
+            notify = Notification.objects.create(user = post.user, link = reverse('blogPost', kwargs={'slug' : post.slug})+"#"+comment.slug, description = f'''{request.user.username} has commented on your Blog "{post.title}" - "{comment.comment}"''')
+
     return redirect(f"/blog/{post.slug}") 
 
 def createBlog(request):
@@ -65,6 +71,18 @@ def postBlog(request):
 
         else:
             post = Post.objects.create(title = title, content = content, description = description, user = request.user)
+        
+        followers = request.user.followers.all()
+
+        notifications_to_create = [
+            Notification(user = follower.user,
+                         link = reverse('blogPost', kwargs={'slug':post.slug}),
+                         description = f'''{post.user.username} has posted a new blog "{post.title}"'''
+                        )
+            for follower in followers
+        ]
+
+        Notification.objects.bulk_create(notifications_to_create)
 
         post.save()
         messages.success(request, "You blog has been successfully posted")

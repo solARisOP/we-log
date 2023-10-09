@@ -49,7 +49,7 @@
         </div>
         <div class="col-md-11 pt-2">
             <b>{{comment.user.username}}</b> <span class="badge bg-secondary">{{comment.timestamp|naturaltime}}</span>
-            <div class="my-2 text-break">{{comment.comment}}</div>
+            <div class="my-2 text-break" id={{comment.slug}}>{{comment.comment}}</div>
             <div class="reply mx-0">
                 <p class="d-inline-flex gap-1">
                     {% if user.is_authenticated %}
@@ -89,7 +89,7 @@
                         </div>
                         <div class="col-md-11 pt-2">
                             <b>{{reply.user.username}}</b> <span class="badge bg-secondary">{{reply.timestamp|naturaltime}}</span>
-                            <div class="my-2 text-break">{{reply.comment}}</div>
+                            <div class="my-2 text-break" id={{reply.comment.slug}}>{{reply.comment}}</div>
                         </div>
                     </div>
                     {% endfor %}

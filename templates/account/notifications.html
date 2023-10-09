@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}notifications{% endblock title %}
+
+{% block search %}none{% endblock search %}
+
+{% block body %}
+
+<div class="container-fluid h-100 my-3" style="max-width : 1500px;">
+    <h2 class="text-center mb-3">Notifications</h2>
+    
+    {% if notifications.count %}
+    <i class="position-absolute fas fa-ellipsis-vertical" role"button"
+        style="right :355px; top:102px;" data-bs-toggle="dropdown" aria-expanded="false"></i>
+    <ul class="dropdown-menu">
+        <li>
+            <form action="{% url 'notificationDelete' %}" method="POST">
+                {% csrf_token %}
+                <button class="dropdown-item pe-auto" type="submit">
+                    <i class="fas fa-trash mx-2"></i> Delete
+                </button>
+            </form>
+        </li>
+    </ul>
+    <div class="row d-flex justify-content-center align-items-center h-100">
+        <div class="col col-lg-9 col-xl-7">
+            <div class="card card-body" style="border-radius:10px;">
+                {% for notify in notifications %}
+                <a href="{{notify.link}}" class="text-dark text-decoration-none my-2 ">
+                {% if notify.status == 1 %}
+                <div class="h-50 py-4 px-3 text-break" style="background-color : rgb(220, 220, 220); border-radius:8px;">{{notify.description}}</div>
+                {% else %}
+                <div class="h-50 py-4 px-3 text-break" style="background-color : rgb(247, 247, 247); border-radius:8px;">{{notify.description}}</div>
+                {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <h6 class="text-center my-5">no notifications to show</h6>
+    {% endif %}
+</div>
+
+{% endblock body %}
