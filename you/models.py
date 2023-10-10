@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils.timezone import now
 # Create your models here.
 
 class Notification(models.Model):
@@ -16,4 +17,5 @@ class Notification(models.Model):
     status = models.IntegerField(choices=notify_choices, default=NEW)
 
     link = models.TextField(null=False, default="/")
+    timeStamp = models.DateTimeField(default=now)
     description = models.TextField(max_length=155)

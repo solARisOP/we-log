@@ -41,15 +41,20 @@ active
                                 Edit Profile
                             </button>
                             {% elif user.is_authenticated %}
-                            {% if x == '1' %}
-                                <a role="button" class="btn btn-outline-dark mt-2" style="z-index: 1;" href={% url 'unFollow' user_.username %}>
+                                {% csrf_token %}
+                                <a role="button" 
+                                {% if x == '1' %}
+                                class="btn btn-outline-dark mt-2"
+                                {% else %}
+                                class="btn btn-dark mt-2"
+                                {% endif %} 
+                                 style="z-index: 1;" data-username={{user_.username}} onclick="relationToggle(this)">
+                                    {% if x == '1' %}
                                     Unfollow
-                                </a>
-                            {% else %}
-                                <a role="button" class="btn btn-dark mt-2" style="z-index: 1;" href={% url 'follow' user_.username %}>
+                                    {% else %}
                                     Follow
+                                    {% endif %}
                                 </a>
-                            {% endif %}
                             {% endif %}
                         </div>
                         <div class="ms-3" style="margin-top: 130px;">
@@ -65,7 +70,7 @@ active
                             </div>
                             <a href={% url 'accounts' user_.username "followers" %} class="text-decoration-none text-dark mx-2"  role="button">
                                 <div>
-                                    <p class="mb-1 h5">{{user_.followers.count}}</p>
+                                    <p class="mb-1 h5" id="followers-cnt">{{user_.followers.count}}</p>
                                     <p class="small text-muted mb-0">Followers</p>
                                 </div>
                             </a>

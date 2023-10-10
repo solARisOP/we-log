@@ -6,9 +6,8 @@ from blog.models import Post
 from django.core.exceptions import ObjectDoesNotExist
 from django.conf import settings
 from django.core.mail import send_mail
-import random
+import random, json
 from email_validator import validate_email, EmailNotValidError
-import json
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from you.models import Notification
@@ -17,7 +16,7 @@ from django.db.models import Q
 
 def profilePage(request):
     if request.user.is_authenticated:
-        allPosts = Post.objects.filter(user = request.user)
+        allPosts = Post.objects.filter(user = request.user).order_by('-timeStamp')
         context = {'allPosts' : allPosts, 'user_' : request.user}
         return render(request, 'account/user_profile.html', context)
     else :
@@ -244,8 +243,8 @@ def handleLogout(request):
         return HttpResponse('Invalid request', status=404)
     
 def follow(request, username):
-    if request.user.is_authenticated:
-        currentPath = request.META.get('HTTP_REFERER').split("127.0.0.1:8000")[1]
+    if request.user.is_authenticated and request.method=="POST":
+        # currentPath = request.META.get('HTTP_REFERER').split("127.0.0.1:8000")[1]
         profile_a = UserProfile.objects.get(user = request.user)
 
         user_ = User.objects.get(username = username)
@@ -257,15 +256,15 @@ def follow(request, username):
         profile_a.save()
         profile_b.save()
 
-        notify = Notification.objects.create(user = profile_b.user, link = reverse('authorProfile', kwargs={'username' : profile_a.user.username}), description = f"{profile_a.user.username} has started following you")
+        notify, created = Notification.objects.get_or_create(user = profile_b.user, link = reverse('authorProfile', kwargs={'username' : profile_a.user.username}), description = f"{profile_a.user.username} has started following you")
 
-        return redirect(currentPath)
+        return JsonResponse({'message' : 'done'})
     return HttpResponse('sorry cannot understand your request', status=404)
 
 def unFollow(request, username):
 
-    if request.user.is_authenticated:
-        currentPath = request.META.get('HTTP_REFERER').split("127.0.0.1:8000")[1]
+    if request.user.is_authenticated and request.method=="POST":
+        # currentPath = request.META.get('HTTP_REFERER').split("127.0.0.1:8000")[1]
         profile_a = UserProfile.objects.get(user = request.user)
 
         user_ = User.objects.get(username = username)
@@ -277,14 +276,20 @@ def unFollow(request, username):
         profile_a.save()
         profile_b.save()
 
-        return redirect(currentPath)
+        notify = Notification.objects.filter(user = profile_b.user, link = reverse('authorProfile', kwargs={'username' : profile_a.user.username}), description = f"{profile_a.user.username} has started following you")
+
+        if notify is not None:
+            notify.delete()
+
+
+        return JsonResponse({'message' : 'done'})
     return HttpResponse('sorry cannot understand your request', status=404)
 
 def notificationPage(request):
     if request.user.is_authenticated:
         Notification.objects.filter(user = request.user, status = Notification.CURRENT).update(status = Notification.READ)
         Notification.objects.filter(user = request.user, status = Notification.NEW).update(status = Notification.CURRENT)
-        notifications = Notification.objects.filter(user = request.user)
+        notifications = Notification.objects.filter(user = request.user).order_by('timeStamp')
         context = {'notifications' : notifications}
         return render(request, "account/notifications.html", context)
         
@@ -293,7 +298,7 @@ def notificationPage(request):
 def notificationDelete(request):
     if request.user.is_authenticated and request.method == "POST":
         Notification.objects.filter(Q(status = Notification.CURRENT) | Q(status = Notification.READ), user = request.user).delete()
-        return render(request, 'account/notifications.html')
+        return redirect(reverse('notificationPage'))
     return HttpResponse("Sorry could not understand you request", status = 404)
 
 

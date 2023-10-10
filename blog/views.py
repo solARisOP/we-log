@@ -132,11 +132,13 @@ def deleteBlog(request, slug):
         if post is not None and post.user == request.user:
             post.delete()
             messages.success(request, "Your Post has been successfully deleted")
+            Notification.objects.filter(link = reverse('blogPost', kwargs={'slug':post.slug})).delete()
             return redirect(currentPath)
         
         else:
             messages.error(request, "cannot understand you request")
             return redirect(currentPath) 
+        
         
     return HttpResponse("very bad request", status= 405)
         

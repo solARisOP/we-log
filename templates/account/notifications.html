@@ -10,7 +10,7 @@
     <h2 class="text-center mb-3">Notifications</h2>
     
     {% if notifications.count %}
-    <i class="position-absolute fas fa-ellipsis-vertical" role"button"
+    <i class="position-absolute fas fa-ellipsis-vertical"
         style="right :355px; top:102px;" data-bs-toggle="dropdown" aria-expanded="false"></i>
     <ul class="dropdown-menu">
         <li>
@@ -26,11 +26,11 @@
         <div class="col col-lg-9 col-xl-7">
             <div class="card card-body" style="border-radius:10px;">
                 {% for notify in notifications %}
-                <a href="{{notify.link}}" class="text-dark text-decoration-none my-2 ">
+                <a href="{{notify.link}}" class="text-dark text-decoration-none my-1 ">
                 {% if notify.status == 1 %}
-                <div class="h-50 py-4 px-3 text-break" style="background-color : rgb(220, 220, 220); border-radius:8px;">{{notify.description}}</div>
+                <div class="h-50 py-4 px-3 text-break bg-black text-white" style="border-radius:8px;">{{notify.description}}</div>
                 {% else %}
-                <div class="h-50 py-4 px-3 text-break" style="background-color : rgb(247, 247, 247); border-radius:8px;">{{notify.description}}</div>
+                <div class="h-50 py-4 px-3 text-break bg-light" style="border-radius:8px;">{{notify.description}}</div>
                 {% endif %}
                 {% endfor %}
             </div>
