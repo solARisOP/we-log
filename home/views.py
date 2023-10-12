@@ -42,7 +42,7 @@ def authorProfile(request, username):
     if request.user.is_authenticated and request.user == user_:
         return redirect('/you')
     
-    allPosts = Post.objects.filter(user = user_)
+    allPosts = Post.objects.filter(user = user_).order_by('-timeStamp')
     if request.user.is_authenticated:
         profile = UserProfile.objects.get(user = request.user)
         followers = user_.followers.all()
@@ -81,6 +81,7 @@ def search(request):
         
         allPosts = allPostsTitle.union(allPostsContent, allPostsDescription)
         context = {'allPosts' : allPosts}
+        request.session["query"] = title
         return render(request, 'blog/blogHome.html', context)
 
     elif 'name' in request.GET:

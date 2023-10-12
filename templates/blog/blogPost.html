@@ -15,16 +15,51 @@
 {% block body %}
 {% load humanize %}
 {% load extras %}
+
+<!--blog post content-->
 <div class="container-fluid my-3 mb-5" style="max-width: 1000px;">
     <h1 class="blog-post-title">{{post.title}}</h1>
-    <p class="blog-post-meta">{{post.timeStamp}} by <a class="link-opacity-75 link-underline-opacity-0 link-underline-opacity-100-hover link-dark link-opacity-100-hover" href={% url 'authorProfile' post.user.username %}>{{post.user.username}}</a></p>
-
+    <div class="d-flex justify-content-between align-items-center px-2">
+        <p class="blog-post-meta mb-0">{{post.timeStamp}} by <a class="link-opacity-75 link-underline-opacity-0 link-underline-opacity-100-hover link-dark link-opacity-100-hover" 
+            href={% url 'authorProfile' post.user.username %}>{{post.user.username}}</a></p> 
+        <div class="d-flex align-items-center">
+            <i class="fa fa-eye ms-3 me-2"></i><p class="mb-0"></p>{{post.viewcount.all.count}}
+            <i class="fa fa-thumbs-up ms-3 me-2"></i><p class="mb-0" id="like-cnt">{{post.likes.all.count}}</p>
+            <i class="fa fa-thumbs-down ms-3 me-2"></i><p class="mb-0" id="dislike-cnt">{{post.dislikes.all.count}}</p>
+        </div>
+    </div>
     <p class="text-break" >{{post.content|safe}}</p>
     <hr>
 </div>
 
+<!--blog post comments-->
 <div class="container-fluid" style="max-width: 1000px;">
-    <h2>Comments ({{comments.count}})</h2>
+    <div class="d-flex justify-content-between align-items-center">
+        <h2>Comments ({{comments.count}})</h2>
+        {% if user.is_authenticated %}
+        <div class="d-flex align-items-center me-2">
+            {% csrf_token %}
+            <div class="me-3">
+                <i id="like-btn" class="fa 
+                {% if like %}
+                fa-thumbs-up
+                {% else %}
+                fa-thumbs-o-up 
+                {% endif %}
+                " aria-hidden="true" style="font-size:24px; cursor: pointer;" data-post={{post.slug}} onclick="Like(this)"></i>
+            </div>
+            <div class="ms-3">
+                <i id="dislike-btn" class="fa 
+                {% if dislike %}
+                fa-thumbs-down
+                {% else %}
+                fa-thumbs-o-down 
+                {% endif %}
+                " aria-hidden="true" style="font-size:24px; cursor: pointer;" data-post={{post.slug}} onclick="Dislike(this)"></i>
+            </div>
+        </div>
+        {% endif %}
+    </div>
     <div class="my-2">
         {% if user.is_authenticated %}
         <form method="POST" action="{% url 'postComment' %}">
@@ -39,7 +74,7 @@
             <button type="submit" class="btn btn-dark">Submit</button>
         </form>
         {% else %}
-        <p>Please login to comment</p>
+        <p>Please login to like and comment</p>
         {% endif %}
     </div>
     {% for comment in comments %}
@@ -48,8 +83,8 @@
             <img class="rounded mx-auto d-block w-100 p-3" src="/static/img/user.png" alt = "user">
         </div>
         <div class="col-md-11 pt-2">
-            <b>{{comment.user.username}}</b> <span class="badge bg-secondary">{{comment.timestamp|naturaltime}}</span>
-            <div class="my-2 text-break" id={{comment.slug}}>{{comment.comment}}</div>
+            <a href={% url 'authorProfile' comment.user.username %} role="button" class="text-black text-decoration-none"><b>{{comment.user.username}}</b></a> <span class="badge bg-secondary">{{comment.timestamp|naturaltime}}</span>
+            <div class="my-2 text-break" id="{{comment.slug}}">{{comment.comment}}</div>
             <div class="reply mx-0">
                 <p class="d-inline-flex gap-1">
                     {% if user.is_authenticated %}
@@ -81,6 +116,8 @@
                         </form>
                     </div>
                 </div>
+
+                <!--comment replies-->
                 <div class="collapse" id = "replies{{comment.sno}}">
                     {% for reply in replyDict|get_val:comment.sno  %}
                     <div class="row my-3">
@@ -88,8 +125,8 @@
                             <img class="rounded mx-auto d-block w-100 p-3" src="/static/img/user.png" alt = "user">
                         </div>
                         <div class="col-md-11 pt-2">
-                            <b>{{reply.user.username}}</b> <span class="badge bg-secondary">{{reply.timestamp|naturaltime}}</span>
-                            <div class="my-2 text-break" id={{reply.comment.slug}}>{{reply.comment}}</div>
+                            <a href={% url 'authorProfile' reply.user.username %} role="button" class="text-black text-decoration-none"><b>{{reply.user.username}}</b></a> <span class="badge bg-secondary">{{reply.timestamp|naturaltime}}</span>
+                            <div class="my-2 text-break" id="{{reply.comment.slug}}">{{reply.comment}}</div>
                         </div>
                     </div>
                     {% endfor %}
@@ -101,3 +138,7 @@
 
 </div>
 {% endblock body %}
+
+{% block js %}
+<script src="/static/blog_post.js"></script>
+{% endblock js %}

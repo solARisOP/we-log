@@ -6,24 +6,27 @@
 
 {% block body %}
 
-<div class="container-fluid h-100 my-3" style="max-width : 1500px;">
-    <h2 class="text-center mb-3">Notifications</h2>
+<div class="container-fluid my-3" style="max-width : 850px;">
+    <div class="d-flex justify-content-between align-items-center px-3 my-2">
+        <h2>Notifications</h2>
+        {% if notifications.count %}
+        <i class="fas fa-ellipsis-vertical" data-bs-toggle="dropdown" aria-expanded="false" style="cursor: pointer;"></i>
+        <ul class="dropdown-menu">
+            <li>
+                <form action="{% url 'notificationDelete' %}" method="POST">
+                    {% csrf_token %}
+                    <button class="dropdown-item pe-auto" type="submit">
+                        <i class="fas fa-trash mx-2"></i> Clear all
+                    </button>
+                </form>
+            </li>
+        </ul>
+        {% endif %}
+    </div>
     
     {% if notifications.count %}
-    <i class="position-absolute fas fa-ellipsis-vertical"
-        style="right :355px; top:102px;" data-bs-toggle="dropdown" aria-expanded="false"></i>
-    <ul class="dropdown-menu">
-        <li>
-            <form action="{% url 'notificationDelete' %}" method="POST">
-                {% csrf_token %}
-                <button class="dropdown-item pe-auto" type="submit">
-                    <i class="fas fa-trash mx-2"></i> Delete
-                </button>
-            </form>
-        </li>
-    </ul>
-    <div class="row d-flex justify-content-center align-items-center h-100">
-        <div class="col col-lg-9 col-xl-7">
+    <div class="row d-flex justify-content-center align-items-center">
+        <div class="col col-lg-9 col-xl-7 w-100">
             <div class="card card-body" style="border-radius:10px;">
                 {% for notify in notifications %}
                 <a href="{{notify.link}}" class="text-dark text-decoration-none my-1 ">
@@ -32,6 +35,7 @@
                 {% else %}
                 <div class="h-50 py-4 px-3 text-break bg-light" style="border-radius:8px;">{{notify.description}}</div>
                 {% endif %}
+                </a>
                 {% endfor %}
             </div>
         </div>

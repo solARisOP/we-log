@@ -148,3 +148,5 @@ EMAIL_USE_TLS = True
 EMAIL_PORT = 587
 EMAIL_HOST_USER = config('welog_email')
 EMAIL_HOST_PASSWORD = config('welog_email_')
+
+SESSION_COOKIE_AGE = 315360000

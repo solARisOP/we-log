@@ -110,8 +110,8 @@ active
                     class="row g-0 border rounded overflow-hidden flex-md-row mt-2 mb-4 shadow-sm h-md-250 position-relative">
                     <div class="col p-4 d-flex flex-column position-static">
                         {% if user == user_ %}
-                        <i class="position-absolute fas fa-ellipsis-vertical" role"button"
-                            style="right :35px; top:30px;" data-bs-toggle="dropdown" aria-expanded="false"></i>
+                        <i class="position-absolute fas fa-ellipsis-vertical" 
+                            style="right :35px; top:30px; cursor: pointer;" data-bs-toggle="dropdown" aria-expanded="false"></i>
                         <ul class="dropdown-menu">
                             <li>
                                 <a class="dropdown-item" role="button" href={% url 'updateView' post.slug %}>

@@ -59,3 +59,16 @@ class BlogComment(models.Model):
             self.slug = self._generate_unique_slug()
             
         super().save(*args, **kwargs)
+
+class ViewCount(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='viewcount')
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='viewcount')
+
+class Like(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='likes')
+    post = models.ForeignKey(Post, on_delete=models.CASCADE,  related_name='likes')
+
+class Dislike(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='dislikes')
+    post = models.ForeignKey(Post, on_delete=models.CASCADE,  related_name='dislikes')
+
