@@ -105,6 +105,8 @@ active
                         <p class="lead fw-normal fs-4 mb-0" id="blogs-section">Blogs</p>
                 </div>
                 {% endif %}
+
+                <!--blog posts of this user-->
                 {% for post in allPosts %}
                 <div
                     class="row g-0 border rounded overflow-hidden flex-md-row mt-2 mb-4 shadow-sm h-md-250 position-relative">
@@ -142,6 +144,25 @@ active
                     </div>
                 </div>
                 {% endfor %}
+
+                <!--switch pages-->
+                <div class="d-flex justify-content-center">
+                    <span class="d-flex align-items-center">
+                        {% if allPosts.has_previous %}
+                            <a class="link-opacity-50 link-opacity-100-hover link-dark link-underline-opacity-10 link-underline-opacity-75-hover" href="?page=1">&laquo;</a>
+                            <a class="link-opacity-50 link-opacity-100-hover link-dark link-underline-opacity-10 link-underline-opacity-75-hover mx-2" href="?page={{ allPosts.previous_page_number }}">previous</a>
+                        {% endif %}
+                
+                        <span class="mx-2">
+                            Page {{ allPosts.number }} of {{ allPosts.paginator.num_pages }}.
+                        </span>
+                
+                        {% if allPosts.has_next %}
+                            <a class="link-opacity-50 link-opacity-100-hover link-dark link-underline-opacity-10 link-underline-opacity-75-hover mx-2" href="?page={{ allPosts.next_page_number }}">next</a>
+                            <a class="link-opacity-50 link-opacity-100-hover link-dark link-underline-opacity-10 link-underline-opacity-75-hover" href="?page={{ allPosts.paginator.num_pages }}">&raquo;</a>
+                        {% endif %}
+                    </span>
+                </div>
             </div>
         </div>
     </div>

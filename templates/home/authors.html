@@ -35,8 +35,12 @@ Users and Authors
 
 {% block body %}
 <div class="container-fluid my-3" style="max-width : 1000px;">
+
     {% if users %}
+    
     <h2 class="my-3">Users and Authors</h2>
+
+    <!--profiles of users and authors-->
     <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
         {% for user_ in users %}
         <div class="col">
@@ -66,8 +70,31 @@ Users and Authors
             </div>
         </div>
         {% endfor %}
+
+        
     </div>
+    
+    <!--switch pages-->
+    <div class="d-flex justify-content-center my-4">
+        <span class="d-flex align-items-center">
+            {% if users.has_previous %}
+                <a class="link-opacity-50 link-opacity-100-hover link-dark link-underline-opacity-10 link-underline-opacity-75-hover" href="?page=1">&laquo;</a>
+                <a class="link-opacity-50 link-opacity-100-hover link-dark link-underline-opacity-10 link-underline-opacity-75-hover mx-2" href="?page={{ users.previous_page_number }}">previous</a>
+            {% endif %}
+    
+            <span class="mx-2">
+                Page {{ users.number }} of {{ users.paginator.num_pages }}.
+            </span>
+    
+            {% if users.has_next %}
+                <a class="link-opacity-50 link-opacity-100-hover link-dark link-underline-opacity-10 link-underline-opacity-75-hover mx-2" href="?page={{ users.next_page_number }}">next</a>
+                <a class="link-opacity-50 link-opacity-100-hover link-dark link-underline-opacity-10 link-underline-opacity-75-hover" href="?page={{ users.paginator.num_pages }}">&raquo;</a>
+            {% endif %}
+        </span>
+    </div>
+
     {% elif profiles %}
+
     <h2 class="my-3">
         {% if f == 1 %}
         followers
@@ -75,6 +102,8 @@ Users and Authors
         following
         {% endif %}
     </h2>
+
+    <!--profiles of followers and following-->
     <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
         {% for profile in profiles %}
         <div class="col">
@@ -105,6 +134,27 @@ Users and Authors
         </div>
         {% endfor %}
     </div>
+
+    <!--switch pages-->
+    <div class="d-flex justify-content-center my-4">
+        <span class="d-flex align-items-center">
+            {% if profiles.has_previous %}
+                <a class="link-opacity-50 link-opacity-100-hover link-dark link-underline-opacity-10 link-underline-opacity-75-hover" href="?page=1">&laquo;</a>
+                <a class="link-opacity-50 link-opacity-100-hover link-dark link-underline-opacity-10 link-underline-opacity-75-hover mx-2" href="?page={{ profiles.previous_page_number }}">previous</a>
+            {% endif %}
+    
+            <span class="mx-2">
+                Page {{ profiles.number }} of {{ profiles.paginator.num_pages }}.
+            </span>
+    
+            {% if profiles.has_next %}
+                <a class="link-opacity-50 link-opacity-100-hover link-dark link-underline-opacity-10 link-underline-opacity-75-hover mx-2" href="?page={{ profiles.next_page_number }}">next</a>
+                <a class="link-opacity-50 link-opacity-100-hover link-dark link-underline-opacity-10 link-underline-opacity-75-hover" href="?page={{ profiles.paginator.num_pages }}">&raquo;</a>
+            {% endif %}
+        </span>
+    </div>
+
     {% endif %}
+
 </div>
 {% endblock body %}

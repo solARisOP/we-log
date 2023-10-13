@@ -14,30 +14,32 @@
 
 {% block body %}
 <div class="container-fluid my-3" style="max-width: 1000px;">
+
+    <!-- sortby options -->
     <div class="d-flex justify-content-between align-items-center pe-2">
         <h2>Blogs on weLog</h2>
-        {% comment %} <div class="text-decoration-none text-dark" data-bs-toggle="dropdown" style="font-size: 20px;"> {% endcomment %}
-            <i class="fa fa-sort" aria-hidden="true" data-bs-toggle="dropdown" aria-expanded="false" style="cursor: pointer;"></i>
-            <ul class="dropdown-menu">
-                <li>
-                    <a href={% url 'sortBy' 1 %} class="dropdown-item pe-auto text-decoration-none text-dark" role="button">
-                        <i class="fas fa-eye ms-2 me-3"></i> veiws
-                    </a>
-                </li>
-                <li>
-                    <a href={% url 'sortBy' 2 %} class="dropdown-item pe-auto text-decoration-none text-dark" role="button">
-                        <i class="fas fa-thumbs-up ms-2 me-3"></i> likes
-                    </a>
-                </li>
-                <li>
-                    <a href={% url 'sortBy' 3 %} class="dropdown-item pe-auto text-decoration-none text-dark" role="button">
-                        <i class="fas fa-fire ms-2 me-3"></i> latest
-                    </a>
-                </li>
-            </ul>
-             {% comment %} Sort By
-        </div> {% endcomment %}
+    
+        <i class="fa fa-sort" aria-hidden="true" data-bs-toggle="dropdown" aria-expanded="false" style="cursor: pointer;"></i>
+        <ul class="dropdown-menu">
+            <li>
+                <a href={% url 'sortBy' 1 %} class="dropdown-item pe-auto text-decoration-none text-dark" role="button">
+                    <i class="fas fa-eye ms-2 me-3"></i> veiws
+                </a>
+            </li>
+            <li>
+                <a href={% url 'sortBy' 2 %} class="dropdown-item pe-auto text-decoration-none text-dark" role="button">
+                    <i class="fas fa-thumbs-up ms-2 me-3"></i> likes
+                </a>
+            </li>
+            <li>
+                <a href={% url 'sortBy' 3 %} class="dropdown-item pe-auto text-decoration-none text-dark" role="button">
+                    <i class="fas fa-fire ms-2 me-3"></i> latest
+                </a>
+            </li>
+        </ul>
     </div>
+
+    <!-- posts -->
     {% for post in allPosts %}
     <div class="row g-0 border rounded overflow-hidden flex-md-row my-4 shadow-sm h-md-250 position-relative">
         <div class="col p-4 d-flex flex-column position-static">
@@ -56,5 +58,24 @@
         </div>
     </div>
     {% endfor %}
+
+    <!--switch pages-->
+    <div class="d-flex justify-content-center">
+        <span class="d-flex align-items-center">
+            {% if allPosts.has_previous %}
+                <a class="link-opacity-50 link-opacity-100-hover link-dark link-underline-opacity-10 link-underline-opacity-75-hover" href="?page=1">&laquo;</a>
+                <a class="link-opacity-50 link-opacity-100-hover link-dark link-underline-opacity-10 link-underline-opacity-75-hover mx-2" href="?page={{ allPosts.previous_page_number }}">previous</a>
+            {% endif %}
+    
+            <span class="mx-2">
+                Page {{ allPosts.number }} of {{ allPosts.paginator.num_pages }}.
+            </span>
+    
+            {% if allPosts.has_next %}
+                <a class="link-opacity-50 link-opacity-100-hover link-dark link-underline-opacity-10 link-underline-opacity-75-hover mx-2" href="?page={{ allPosts.next_page_number }}">next</a>
+                <a class="link-opacity-50 link-opacity-100-hover link-dark link-underline-opacity-10 link-underline-opacity-75-hover" href="?page={{ allPosts.paginator.num_pages }}">&raquo;</a>
+            {% endif %}
+        </span>
+    </div>
 </div>
 {% endblock body %}

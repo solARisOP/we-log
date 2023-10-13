@@ -4,6 +4,7 @@ from django.contrib import messages
 from blog.models import Post
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
+from django.core.paginator import Paginator
 
 def home(request):
     return render(request, "home/home.html")
@@ -14,10 +15,22 @@ def accounts(request, **kwargs):
         type_ = kwargs['type']
         profiles = user.followers.all() if type_ == 'followers' else user.following.all()
         f = 1 if type_ == 'followers' else  0
-        context = {'profiles' : profiles, 'f' : f, 'uzer' : user}
+        pages = 3
+        paginate = Paginator(profiles, pages, orphans=len(profiles)%pages)
+        page = 1
+        if 'page' in request.GET:
+            page = request.GET['page']
+        page_obj = paginate.get_page(page)
+        context = {'profiles' : page_obj, 'uzer' : user, 'f' : f}
     else:
         users = User.objects.all()
-        context = {'users' : users}
+        pages = 3
+        paginate = Paginator(users, pages, orphans=len(users)%pages)
+        page = 1
+        if 'page' in request.GET:
+            page = request.GET['page']
+        page_obj = paginate.get_page(page)
+        context = {'users' : page_obj}
 
     return render(request, 'home/authors.html', context)
 
@@ -34,7 +47,15 @@ def accountSearch(request, **kwargs):
 
     q = q1.union(q2, q3)
     profiles = q.intersection(profiles)
-    context = {'profiles' : profiles, 'uzer' : user, 'f' : f}
+
+    pages = 3
+    paginate = Paginator(profiles, pages, orphans=len(profiles)%pages)
+    page = 1
+    if 'page' in request.GET:
+        page = request.GET['page']
+    page_obj = paginate.get_page(page)
+    context = {'profiles' : page_obj, 'uzer' : user, 'f' : f}
+
     return render(request, 'home/authors.html', context)
 
 def authorProfile(request, username):
@@ -43,6 +64,12 @@ def authorProfile(request, username):
         return redirect('/you')
     
     allPosts = Post.objects.filter(user = user_).order_by('-timeStamp')
+    pages = 2
+    paginate = Paginator(allPosts, pages, orphans=len(allPosts)%pages)
+    page =1
+    if 'page' in request.GET:
+        page = request.GET['page']
+    page_obj = paginate.get_page(page)
     if request.user.is_authenticated:
         profile = UserProfile.objects.get(user = request.user)
         followers = user_.followers.all()
@@ -50,9 +77,9 @@ def authorProfile(request, username):
             x = '1'
         else:
             x = '0'
-        context = {'x' : x, 'allPosts' : allPosts, 'user_' : user_}
+        context = {'x' : x, 'allPosts' : page_obj, 'user_' : user_}
     else:
-        context = {'allPosts' : allPosts, 'user_' : user_}
+        context = {'allPosts' : page_obj, 'user_' : user_}
 
     return render(request, 'account/user_profile.html', context)
     
@@ -80,7 +107,15 @@ def search(request):
         allPostsDescription = Post.objects.filter(description__icontains = title)
         
         allPosts = allPostsTitle.union(allPostsContent, allPostsDescription)
-        context = {'allPosts' : allPosts}
+
+        pages = 3
+        paginate = Paginator(allPosts, pages, orphans=len(allPosts)%pages)
+        page = 1
+        if 'page' in request.GET:
+            page = request.GET['page']
+        page_obj = paginate.get_page(page)
+        context = {'allPosts' : page_obj}
+
         request.session["query"] = title
         return render(request, 'blog/blogHome.html', context)
 
@@ -91,7 +126,15 @@ def search(request):
         q3 = User.objects.filter(last_name__icontains = name)
 
         users = q1.union(q2, q3)
-        context = {'users' : users}
+
+        pages = 3
+        paginate = Paginator(users, pages, orphans=len(users)%pages)
+        page = 1
+        if 'page' in request.GET:
+            page = request.GET['page']
+        page_obj = paginate.get_page(page)
+        context = {'users' : page_obj}
+
         return render(request, 'home/authors.html', context)
     
     else:

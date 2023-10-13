@@ -8,11 +8,18 @@ from you.models import Notification
 from django.http import JsonResponse
 import json
 from django.db.models import Count
+from django.core.paginator import Paginator
 
 def blogHome(request):
     request.session.pop("query", None)
-    allPosts = Post.objects.all()
-    context = {'allPosts' : allPosts}
+    allPosts = Post.objects.all().order_by('-timeStamp')
+    pages = 3
+    paginate = Paginator(allPosts, pages, orphans=len(allPosts)%pages)
+    page = 1
+    if 'page' in request.GET:
+        page = request.GET['page']
+    page_obj = paginate.get_page(page)
+    context = {'allPosts' : page_obj}
     return render(request, "blog/blogHome.html", context)
 
 def blogPost(request, slug):
@@ -204,7 +211,14 @@ def sortBy(request, opt):
         allPosts = allPosts.order_by('-love')
     elif opt == 3:
         allPosts = allPosts.order_by('-timeStamp')
-    
-    context = {'allPosts' : allPosts}
+
+    pages = 3
+    paginate = Paginator(allPosts, pages, orphans=len(allPosts)%pages)
+    page = 1
+    if 'page' in request.GET:
+            page = request.GET['page']
+    page_obj = paginate.get_page(page)
+    context = {'allPosts' : page_obj}
+
     return render(request, "blog/blogHome.html", context)
 
