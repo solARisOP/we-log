@@ -7,7 +7,9 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.core.paginator import Paginator
 
 def home(request):
-    return render(request, "home/home.html")
+    allPosts = Post.objects.all()[0:10]
+    context = {'allPosts' : allPosts}
+    return render(request, "home/home.html", context)
 
 def accounts(request, **kwargs):
     if kwargs.keys():
@@ -15,7 +17,7 @@ def accounts(request, **kwargs):
         type_ = kwargs['type']
         profiles = user.followers.all() if type_ == 'followers' else user.following.all()
         f = 1 if type_ == 'followers' else  0
-        pages = 3
+        pages = 9
         paginate = Paginator(profiles, pages, orphans=len(profiles)%pages)
         page = 1
         if 'page' in request.GET:
@@ -24,7 +26,7 @@ def accounts(request, **kwargs):
         context = {'profiles' : page_obj, 'uzer' : user, 'f' : f}
     else:
         users = User.objects.all()
-        pages = 3
+        pages = 9
         paginate = Paginator(users, pages, orphans=len(users)%pages)
         page = 1
         if 'page' in request.GET:
@@ -48,7 +50,7 @@ def accountSearch(request, **kwargs):
     q = q1.union(q2, q3)
     profiles = q.intersection(profiles)
 
-    pages = 3
+    pages = 9
     paginate = Paginator(profiles, pages, orphans=len(profiles)%pages)
     page = 1
     if 'page' in request.GET:
@@ -64,7 +66,7 @@ def authorProfile(request, username):
         return redirect('/you')
     
     allPosts = Post.objects.filter(user = user_).order_by('-timeStamp')
-    pages = 2
+    pages = 5
     paginate = Paginator(allPosts, pages, orphans=len(allPosts)%pages)
     page =1
     if 'page' in request.GET:
@@ -108,7 +110,7 @@ def search(request):
         
         allPosts = allPostsTitle.union(allPostsContent, allPostsDescription)
 
-        pages = 3
+        pages = 10
         paginate = Paginator(allPosts, pages, orphans=len(allPosts)%pages)
         page = 1
         if 'page' in request.GET:
@@ -127,7 +129,7 @@ def search(request):
 
         users = q1.union(q2, q3)
 
-        pages = 3
+        pages = 9
         paginate = Paginator(users, pages, orphans=len(users)%pages)
         page = 1
         if 'page' in request.GET:

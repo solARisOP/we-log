@@ -5,25 +5,26 @@
 {% block youactive %} active {% endblock youactive %}
 {% block search %}none{% endblock search %}
 {% block body %}
-<div class="row d-flex justify-content-center align-item-center w-50 mx-auto">
+<div class="container-fluid" style="max-width: 800px;">
     <h1 class="display-1 w-100 text-center mb-5">weLog</h1>
-    <p class="fs-5 fw-light">Welcome to Welog, your ultimate blogging platform where your thoughts, ideas, and experiences find their home on the web.
-       Welog is more than just a blog; it's a community of passionate writers, thinkers, and storytellers.</p>
-    <div class="w-25">
-        <button type="button" class="btn bg-black btn-lg text-white w-100 mt-5" data-bs-toggle="modal"
-            data-bs-target="#loginModal">
+    <p class="fs-5 fw-light">Are you ready to embark on a journey of words, ideas, and inspiration? Look no further than WeLog,
+        your one-stop destination for the most engaging and thought-provoking blog content on the web.
+        At weLog, we're passionate about the power of words. Our platform is designed to be a haven for bloggers and readers alike,
+        providing a dynamic space where creativity, knowledge, and storytelling converge.</p>
+    <div class="d-flex align-items-center justify-content-center mt-3">
+        <button type="button" data-bs-toggle="modal" data-bs-target="#loginModal" class="btn bg-black btn-lg text-white px-5">
             login
         </button>
     </div>
     <hr class="my-3">
-    <div class="w-25">
-        <button type="button" class="btn bg-black btn-lg text-white w-100 mb-5" data-bs-toggle="modal"
+    <div class="d-flex align-items-center justify-content-center mb-3">
+        <button type="button" class="btn bg-black btn-lg text-white px-5" data-bs-toggle="modal"
             data-bs-target="#signupModal">
             signup
         </button>
     </div>
-    <p class="fs-5 fw-light" >Join Welog and embark on a journey where your thoughts, ideas, and experiences take center stage. 
-    We're not just a platform; we're a canvas for your imagination, a stage for your narratives, and a hub for your connections.
-    Discover Welog and let your voice resonate in the digital realm.</p>
+    <p class="fs-5 fw-light" >WeLog is more than just a blogging platform; it's a hub for creativity and a source of endless inspiration. Whether you're here to read, write,
+        or simply connect with like-minded individuals, we invite you to explore the rich world of ideas and experiences waiting for you.
+        Discover the joy of blogging at WeLog - where words come to life, and inspiration knows no bounds. Join us today and start your journey into the realm of infinite possibilities.</p>
 </div>
 {% endblock body %}

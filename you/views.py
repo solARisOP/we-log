@@ -18,7 +18,7 @@ from django.core.paginator import Paginator
 def profilePage(request):
     if request.user.is_authenticated:
         allPosts = Post.objects.filter(user = request.user).order_by('-timeStamp')
-        pages = 2
+        pages = 5
         paginate = Paginator(allPosts, pages, orphans=len(allPosts)%pages)
         page = 1
         if 'page' in request.GET:
@@ -181,7 +181,6 @@ def checker(request):
             
         else:  
             flag = User.objects.filter(username = data['username']).exists()
-            print("here")
             if flag == 0:
                 request.session["username"] = data['username']
             message = False if flag else True
@@ -298,12 +297,13 @@ def notificationPage(request):
         Notification.objects.filter(user = request.user, status = Notification.NEW).update(status = Notification.CURRENT)
         notifications = Notification.objects.filter(user = request.user).order_by('timeStamp')
 
-        pages = 3
+        pages = 8
         paginate = Paginator(notifications, pages, orphans=len(notifications)%pages)
         page = 1
         if 'page' in request.GET:
             page = request.GET['page']
         page_obj = paginate.get_page(page)
+        print(len(page_obj))
         context = {'notifications' : page_obj}
         
         return render(request, "account/notifications.html", context)

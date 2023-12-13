@@ -4,6 +4,7 @@ var email = document.getElementById('email');
 var fname = document.getElementById('fname');
 var lname = document.getElementById('lname');
 var desc = document.getElementById('desc');
+var new_user_btn = document.getElementById('subcreateuser');
 
 var subbutton2 = document.getElementById("sub-signup-1");
 function send_otp2() {
@@ -88,6 +89,7 @@ var submituser = () => {
     let pass1 = document.getElementById('createpass1').value;
     let pass2 = document.getElementById('createpass2').value;
     let username = document.getElementById('createusername').value;
+    new_user_btn.disabled = true;
     const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
     fetch('/you/check', {
         method: 'POST',
@@ -116,6 +118,7 @@ var submituser = () => {
             else {
                 alert('username already exists');
             }
+            new_user_btn.disabled = false;
         })
         .catch((error) => {
             console.error('Error:', error);

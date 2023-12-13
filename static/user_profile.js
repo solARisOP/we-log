@@ -21,8 +21,8 @@ var imgSize = ()=>{
 }
 
 var relationToggle =(btn)=>{
-
-    btn.disabled = true;
+    btn.style.pointerEvents="none";
+    btn.style.cursor="default";
     let txt = btn.innerText;
 
     let link = ``;
@@ -40,7 +40,8 @@ var relationToggle =(btn)=>{
     })
         .then((response) => response.json())
         .then((data) => {
-            btn.disabled = false;
+            btn.style.pointerEvents="auto";
+            btn.style.cursor="pointer";
             if(txt == "Follow")
             {
                 btn.innerText = "Unfollow";

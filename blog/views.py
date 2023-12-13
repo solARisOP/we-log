@@ -13,7 +13,7 @@ from django.core.paginator import Paginator
 def blogHome(request):
     request.session.pop("query", None)
     allPosts = Post.objects.all().order_by('-timeStamp')
-    pages = 3
+    pages = 10
     paginate = Paginator(allPosts, pages, orphans=len(allPosts)%pages)
     page = 1
     if 'page' in request.GET:
@@ -55,6 +55,7 @@ def blogPost(request, slug):
 
 def postComment(request):
     if request.method=="POST":
+        print("checking")
         comment = request.POST["comment"]
         user = request.user
         slug = request.POST["postSlug"]
@@ -115,6 +116,7 @@ def updateView(request, slug):
         post = Post.objects.get(slug = slug)
         if post is not None and post.user == request.user:
             context = {'post' : post}
+            print(post.title)
             return render(request, "blog/blogUpdate.html", context)
         else:
             messages.error(request, "cannot understand you request")
@@ -122,20 +124,19 @@ def updateView(request, slug):
     
     return HttpResponse("very bad request", status= 405)
 
-def updateBlog(request):
+def updateBlog(request, slug):
     if request.user.is_authenticated:
         title = request.POST['utitle']
         content = request.POST['ublog']
         description = request.POST['udesc']
-        slug = request.POST['blogId']
 
         post = Post.objects.get(slug = slug)
         if post is not None and post.user == request.user:
             post.title = title
             post.content = content
             post.description = description
-            if request.FILES.get('avatar'):
-                post.avatar = request.FILES['avatar']
+            if request.FILES.get('uavatar'):
+                post.avatar = request.FILES['uavatar']
             post.save()
             messages.success(request, "Your Post has been successfully updated")
             return redirect("/you")
@@ -165,6 +166,7 @@ def deleteBlog(request, slug):
 
 def LikesDislikes(request, slug):
     if request.user.is_authenticated and request.method == "POST":
+        print("here")
         data = json.loads(request.body.decode('utf-8'))
         opt = data['message']
         post = Post.objects.get(slug = slug) 
@@ -212,7 +214,7 @@ def sortBy(request, opt):
     elif opt == 3:
         allPosts = allPosts.order_by('-timeStamp')
 
-    pages = 3
+    pages = 10
     paginate = Paginator(allPosts, pages, orphans=len(allPosts)%pages)
     page = 1
     if 'page' in request.GET:

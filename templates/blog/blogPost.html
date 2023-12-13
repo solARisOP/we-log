@@ -39,24 +39,25 @@
         {% if user.is_authenticated %}
         <div class="d-flex align-items-center me-2">
             {% csrf_token %}
-            <div class="me-3">
-                <i id="like-btn" class="fa 
+            <a class="me-3" id="like-btn" style="color:black;">
+                <i id="like-icn" class="fa 
                 {% if like %}
                 fa-thumbs-up
                 {% else %}
                 fa-thumbs-o-up 
                 {% endif %}
-                " aria-hidden="true" style="font-size:24px; cursor: pointer;" data-post={{post.slug}} onclick="Like(this)"></i>
-            </div>
-            <div class="ms-3">
-                <i id="dislike-btn" class="fa 
+                " aria-hidden="true" style="font-size:24px; cursor: pointer;" data-post={{post.slug}}></i>
+            </a>
+            
+            <a class="ms-3" id="dislike-btn" style="color:black;">
+                <i id="dislike-icn" class="fa 
                 {% if dislike %}
                 fa-thumbs-down
                 {% else %}
                 fa-thumbs-o-down 
                 {% endif %}
-                " aria-hidden="true" style="font-size:24px; cursor: pointer;" data-post={{post.slug}} onclick="Dislike(this)"></i>
-            </div>
+                " aria-hidden="true" style="font-size:24px; cursor: pointer;" type="button" data-post={{post.slug}} onclick="Dislike(this)"></i>
+            </a>
         </div>
         {% endif %}
     </div>
@@ -79,10 +80,24 @@
     </div>
     {% for comment in comments %}
     <div class="row my-3">
-        <div class="col-md-1">
-            <img class="rounded mx-auto d-block w-100 p-3" src="/static/img/user.png" alt = "user">
+        <div class="col-2 col-sm-2 col-md-1">
+            {% if comment.user.userprofile.avatar %}
+            <div class="mt-2 d-flex align-items-center justify-content-center bg-white"
+                style=" z-index: 1; height: 60px !important; width: 60px !important; border-radius: 50% !important;">
+                <img class="rounded mx-auto p-1" src={{comment.user.userprofile.avatar.url}}
+                    style="z-index: 1; height:inherit !important; width:inherit !important; border-radius: 50% !important;"
+                    alt="user">
+            </div>
+            {% else %}
+            <div class="mt-2 d-flex align-items-center justify-content-center"
+                style=" z-index: 1; height: 60px !important; width: 60px !important; border-radius: 50%;">
+                <img class="rounded mx-auto p-3" src="/static/img/user.png"
+                    style="z-index: 1; height:inherit !important; width:inherit !important; object-fit: contain !important; border-radius: 4%;"
+                    alt="user">
+            </div>
+            {% endif %}
         </div>
-        <div class="col-md-11 pt-2">
+        <div class="col-10 col-sm-10 col-md-11 pt-2">
             <a href={% url 'authorProfile' comment.user.username %} role="button" class="text-black text-decoration-none"><b>{{comment.user.username}}</b></a> <span class="badge bg-secondary">{{comment.timestamp|naturaltime}}</span>
             <div class="my-2 text-break" id="{{comment.slug}}">{{comment.comment}}</div>
             <div class="reply mx-0">
@@ -121,10 +136,24 @@
                 <div class="collapse" id = "replies{{comment.sno}}">
                     {% for reply in replyDict|get_val:comment.sno  %}
                     <div class="row my-3">
-                        <div class="col-md-1">
-                            <img class="rounded mx-auto d-block w-100 p-3" src="/static/img/user.png" alt = "user">
+                        <div class="col-2 col-sm-2 col-md-1">
+                            {% if reply.user.userprofile.avatar %}
+                            <div class="mt-2 d-flex align-items-center justify-content-center bg-white"
+                                style=" z-index: 1; height: 50px !important; width: 50px !important; border-radius: 50% !important;">
+                                <img class="rounded mx-auto p-1" src={{reply.user.userprofile.avatar.url}}
+                                    style="z-index: 1; height:inherit !important; width:inherit !important; border-radius: 50% !important;"
+                                    alt="user">
+                            </div>
+                            {% else %}
+                            <div class="mt-2 d-flex align-items-center justify-content-center"
+                                style=" z-index: 1; height: 50px !important; width: 50px !important; border-radius: 50%;">
+                                <img class="rounded mx-auto p-3" src="/static/img/user.png"
+                                    style="z-index: 1; height:inherit !important; width:inherit !important; object-fit: contain !important; border-radius: 4%;"
+                                    alt="user">
+                            </div>
+                            {% endif %}
                         </div>
-                        <div class="col-md-11 pt-2">
+                        <div class="col-10 col-sm-10 col-md-11 pt-2">
                             <a href={% url 'authorProfile' reply.user.username %} role="button" class="text-black text-decoration-none"><b>{{reply.user.username}}</b></a> <span class="badge bg-secondary">{{reply.timestamp|naturaltime}}</span>
                             <div class="my-2 text-break" id="{{reply.comment.slug}}">{{reply.comment}}</div>
                         </div>

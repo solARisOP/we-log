@@ -9,12 +9,12 @@
 {% block body %}
 <div class="container-fluid my-3" style="max-width: 1000px;">
     <h3 class="mb-4">Create your blog</h3>
-    <form method="POST" onsubmit="return updateBlog(this)">
+    <form method="POST" onsubmit="return updateBlog(this)" enctype="multipart/form-data">
         {% csrf_token %}
-        <input type="number" name="blogId" hidden  value={{post.slug}}>
+        <input type="text" name="blogSlug" id="blogSlug" data-slug={{post.slug}} hidden>
         <div class="mb-3">
             <label for="utitle" class="form-label">Title</label>
-            <input type="text" class="form-control" id="utitle" name="utitle" aria-describedby="title" pattern=".*\S+.*" value = {{post.title}}
+            <input type="text" class="form-control" id="utitle" name="utitle" aria-describedby="title" pattern=".*\S+.*" value="{{post.title}}"
                 required trim>
         </div>
         <div class="mb-3">
@@ -64,7 +64,8 @@
 <script>
     function updateBlog(form) {
         document.getElementById('ublog').value = tinymce.get("ucontent").getContent();
-        form.action = "/blog/updater";
+        link = form.blogSlug.dataset.slug
+        form.action = `/blog/updater/${link}`;
         return true;
     }
 </script>
