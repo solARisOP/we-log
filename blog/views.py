@@ -112,7 +112,7 @@ def postBlog(request):
     
 def updateView(request, slug):
     if request.user.is_authenticated:
-        currentPath = request.META.get('HTTP_REFERER').split("we-log.vercel.app")[1]
+        currentPath = request.META.get('HTTP_REFERER').split("vercel.app")[1]
         post = Post.objects.get(slug = slug)
         if post is not None and post.user == request.user:
             context = {'post' : post}
@@ -148,7 +148,7 @@ def updateBlog(request, slug):
 
 def deleteBlog(request, slug):
     if request.user.is_authenticated:
-        currentPath = request.META.get('HTTP_REFERER').split("we-log.vercel.app")[1]
+        currentPath = request.META.get('HTTP_REFERER').split("vercel.app")[1]
         post = Post.objects.get(slug = slug)
 
         if post is not None and post.user == request.user:

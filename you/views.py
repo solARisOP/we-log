@@ -51,7 +51,7 @@ def otpVerificater(request):
         data = json.loads(request.body.decode('utf-8'))
         email = data.get('message', '')
         
-        currentPath = request.META.get('HTTP_REFERER').split("we-log.vercel.app")[1]
+        currentPath = request.META.get('HTTP_REFERER').split("vercel.app")[1]
         flag = User.objects.filter(email = email).exists()
         
 
@@ -113,7 +113,7 @@ def passwordReseter(request):
             pass_ = request.POST['useroldpass']
             pass1 = request.POST['respass1']
             pass2 = request.POST['respass2']
-            currentPath = request.META.get('HTTP_REFERER').split("we-log.vercel.app")[1]
+            currentPath = request.META.get('HTTP_REFERER').split("vercel.app")[1]
             if pass1 != pass2:
                 messages.error(request, "Sorry passwords doesnot match")
                 return redirect(currentPath)
@@ -148,7 +148,7 @@ def checker(request):
                 request.session['desc'] = data['desc']
                 request.session['fname'] = data['fname']
                 request.session['lname'] = data['lname']
-                request.session['currpath'] = request.META.get('HTTP_REFERER').split("we-log.vercel.app")[1]
+                request.session['currpath'] = request.META.get('HTTP_REFERER').split("vercel.app")[1]
                 OTP = random.randint(100000, 999999)
                 subject = "OTP verification"
                 message = f'''
@@ -222,7 +222,7 @@ def handleSignup(request):
     
 def handleLogin(request):
     if request.method == 'POST':
-        currentPath = request.META.get('HTTP_REFERER').split("we-log.vercel.app")[1]
+        currentPath = request.META.get('HTTP_REFERER').split("vercel.app")[1]
         loginusername= request.POST['loginusername']
         loginpassword= request.POST['loginpassword']
         user = authenticate(username = loginusername, password = loginpassword)
@@ -241,7 +241,7 @@ def handleLogin(request):
 
 def handleLogout(request):
     if request.user.is_authenticated:
-        currentPath = request.META.get('HTTP_REFERER').split("we-log.vercel.app")[1]
+        currentPath = request.META.get('HTTP_REFERER').split("vercel.app")[1]
         logout(request)
         messages.success(request, "Successfully logged Out")
         return redirect(reverse("home"))
