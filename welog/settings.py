@@ -174,4 +174,7 @@ STORAGES = {
             "AWS_QUERYSTRING_AUTH": False,
         },
     },
+    "staticfiles": {
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+    },
 }
