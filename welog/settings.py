@@ -139,8 +139,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 #     BASE_DIR / "static",
 # ]
 
-MEDIA_ROOT =  BASE_DIR / "media"
-MEDIA_URL = "/media/"
+# MEDIA_ROOT =  BASE_DIR / "media"
+# MEDIA_URL = "/media/"
 
 MESSAGE_TAGS = {
     messages.ERROR: 'danger'
@@ -162,3 +162,16 @@ SECURE_SSL_REDIRECT = True
 SECURE_HSTS_SECONDS = 31536000
 SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 SECURE_HSTS_PRELOAD = True
+
+STORAGES = {
+    "default": {
+        "BACKEND": "storages.backends.s3.S3Storage",
+        "OPTIONS": {
+            "AWS_ACCESS_KEY_ID": os.environ["aws_access_key"],
+            "AWS_SECRET_ACCESS_KEY": os.environ["aws_secret_key"],
+            "AWS_STORAGE_BUCKET_NAME": os.environ["aws_bucket_name"],
+            "AWS_S3_REGION_NAME": os.environ["aws_region"],
+            "AWS_QUERYSTRING_AUTH": False,
+        },
+    },
+}

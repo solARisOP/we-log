@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 # Create your models here.
 
 def user_directory_path(instance, filename):
-    return f'user_{instance.user.username}/{filename}'
+    return f'users/{instance.user.username}/{filename}'
 
 class Contact(models.Model):
     sno = models.AutoField(primary_key=True)

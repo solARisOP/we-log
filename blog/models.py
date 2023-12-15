@@ -6,7 +6,7 @@ import random, string
 # Create your models here.
 
 def post_directory_path(instance, filename):
-    return f'post_{instance.sno}/{filename}'
+    return f'posts/{instance.sno}/{filename}'
 
 class Post(models.Model):
     sno = models.AutoField(primary_key=True)
