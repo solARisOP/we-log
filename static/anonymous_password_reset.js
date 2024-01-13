@@ -45,7 +45,7 @@ function send_OTP() {
 }
 
 function startTimer() {
-    let countdown = 100;
+    let countdown = 60;
     otpdiv.style.display = "block";
     submitButton.style.display = "block";
     countdownDisplay.style.display = "block";

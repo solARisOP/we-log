@@ -52,7 +52,7 @@ var otptimer = () => {
     userotp2.value = "";
     const otpmodal2 = document.getElementById("selfclick-2");
     otpmodal2.click();
-    let countdown = 30;
+    let countdown = 60;
     countdownIntervalOtp = setInterval(() => {
         if (countdown <= 0) {
             subbutton2.disabled = false;
