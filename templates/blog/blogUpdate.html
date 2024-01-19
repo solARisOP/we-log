@@ -45,28 +45,33 @@
 
 <script type="text/javascript">
     tinymce.init({
-        selector: '#ucontent',
+        selector: '#content',
         plugins: [
             'advlist', 'autolink', 'link', 'image', 'lists', 'charmap', 'preview', 'anchor', 'pagebreak',
             'searchreplace', 'wordcount', 'visualblocks', 'visualchars', 'code', 'fullscreen', 'insertdatetime',
-            'media', 'table', 'emoticons', 'template', 'help'
+            'media', 'table', 'emoticons', 'template', 'help', 'codesample'
         ],
         toolbar: 'undo redo | styles | bold italic | alignleft aligncenter alignright alignjustify | ' +
             'bullist numlist outdent indent | link image | print preview media fullscreen | ' +
-            'forecolor backcolor emoticons | help',
+            'forecolor backcolor emoticons | help codesample',
         menu: {
             favs: { title: 'My Favorites', items: 'code visualaid | searchreplace | emoticons' }
         },
         menubar: 'favs file edit view insert format tools table help',
+        image_dimensions: false,
+        image_class_list: [
+           {title: 'Responsive', value: 'img-fluid'}
+       ]
     });
 </script>
 
 <script>
-    function updateBlog(form) {
-        document.getElementById('ublog').value = tinymce.get("ucontent").getContent();
-        link = form.blogSlug.dataset.slug
-        form.action = `/blog/updater/${link}`;
+    function postBlog(form) {
+        document.getElementById('blog').value = tinymce.get("content").getContent();
+        form.action = "/blog/postblog";
         return true;
     }
 </script>
+<link rel="stylesheet" type="text/css" href="/static/prism.css">
+<script src="/static/prism.js"></script>
 {% endblock js %}
