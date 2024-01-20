@@ -33,6 +33,9 @@
 
         <button type="submit" class="btn btn-dark" >Submit</button>
     </form>
+    <!--{% comment %} var a = $("#content").val();
+    a = a.replace(/\n/g, '<br />');
+    $("#content").val(a); {% endcomment %}-->
 </div>
 {% endblock body %}
 
@@ -64,9 +67,6 @@
         force_br_newlines : true,
         force_p_newlines : false,
     });
-    {% comment %} var a = $("#content").val();
-    a = a.replace(/\n/g, '<br />');
-    $("#content").val(a); {% endcomment %}
 </script>
 
 <script>
