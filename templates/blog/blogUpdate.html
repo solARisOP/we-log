@@ -62,6 +62,7 @@
         image_class_list: [
            {title: 'Responsive', value: 'img-fluid'}
        ],
+       convert_newlines_to_brs : true
        remove_linebreaks : false,
        force_br_newlines : true,
        force_p_newlines : false,
@@ -70,9 +71,6 @@
 
 <script>
     function updateBlog(form) {
-        var a = $("#ucontent").val();
-        a = a.replace(/\n/g, '<br />');
-        $("#ucontent").val(a);
         document.getElementById('ublog').value = tinymce.get("ucontent").getContent();
         link = form.blogSlug.dataset.slug
         form.action = `/blog/updater/${link}`;

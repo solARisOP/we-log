@@ -60,6 +60,7 @@
         image_class_list: [
            {title: 'Responsive', value: 'img-fluid'}
         ],
+        convert_newlines_to_brs : true
         remove_linebreaks : false,
         force_br_newlines : true,
         force_p_newlines : false,
@@ -68,9 +69,6 @@
 
 <script>
     function postBlog(form) {
-        var a = $("#content").val();
-        a = a.replace(/\n/g, '<br />');
-        $("#content").val(a);
         document.getElementById('blog').value = tinymce.get("content").getContent();
         form.action = "/blog/postblog";
         return true;
