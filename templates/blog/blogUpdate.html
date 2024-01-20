@@ -61,11 +61,19 @@
         image_dimensions: false,
         image_class_list: [
            {title: 'Responsive', value: 'img-fluid'}
-       ],
-       convert_newlines_to_brs : true,
-       remove_linebreaks : false,
-       force_br_newlines : true,
-       force_p_newlines : false,
+        ],
+        convert_newlines_to_brs : true,
+        remove_linebreaks : false,
+        force_br_newlines : true,
+        force_p_newlines : false,
+        setup : function(editor) {
+
+            editor.on('EditorChange ', function(ed) {
+                // we are cleaning empty paragraphs
+                ed.content = ed.content.replace(/(<p>&nbsp;<\/p>)/gi,'<br />');
+            });
+
+        },
     });
 </script>
 
