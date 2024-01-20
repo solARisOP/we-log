@@ -70,6 +70,9 @@
 
 <script>
     function updateBlog(form) {
+        var a = $("#ucontent").val();
+        a = a.replace(/\n/g, '<br />');
+        $("#ucontent").val(a);
         document.getElementById('ublog').value = tinymce.get("ucontent").getContent();
         link = form.blogSlug.dataset.slug
         form.action = `/blog/updater/${link}`;

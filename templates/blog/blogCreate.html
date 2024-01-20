@@ -33,9 +33,6 @@
 
         <button type="submit" class="btn btn-dark" >Submit</button>
     </form>
-    <!--{% comment %} var a = $("#content").val();
-    a = a.replace(/\n/g, '<br />');
-    $("#content").val(a); {% endcomment %}-->
 </div>
 {% endblock body %}
 
@@ -71,6 +68,9 @@
 
 <script>
     function postBlog(form) {
+        var a = $("#content").val();
+        a = a.replace(/\n/g, '<br />');
+        $("#content").val(a);
         document.getElementById('blog').value = tinymce.get("content").getContent();
         form.action = "/blog/postblog";
         return true;
