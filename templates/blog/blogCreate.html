@@ -60,25 +60,12 @@
         image_class_list: [
            {title: 'Responsive', value: 'img-fluid'}
         ],
-        convert_newlines_to_brs : true,
-        remove_linebreaks : false,
-        force_br_newlines : true,
-        force_p_newlines : false,
-        newline_behavior: 'linebreak',
-        setup : function(editor) {
-
-            editor.on('EditorChange ', function(ed) {
-                // we are cleaning empty paragraphs
-                ed.content = ed.content.replace(/(<p>&nbsp;<\/p>)/gi,'<br />');
-            });
-
-        },
     });
 </script>
 
 <script>
     function postBlog(form) {
-        document.getElementById('blog').value = tinymce.get("content").getContent();
+        document.getElementById('blog').value = tinymce.get("content").getContent().replace(/[\r\n]+/g, "<br />");
         form.action = "/blog/postblog";
         return true;
     }

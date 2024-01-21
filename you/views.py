@@ -250,7 +250,7 @@ def handleLogout(request):
     
 def follow(request, username):
     if request.user.is_authenticated and request.method=="POST":
-        # currentPath = request.META.get('HTTP_REFERER').split("127.0.0.1:8000")[1]
+        # currentPath = request.META.get('HTTP_REFERER').split("vercel.app")[1]
         profile_a = UserProfile.objects.get(user = request.user)
 
         user_ = User.objects.get(username = username)
@@ -270,7 +270,7 @@ def follow(request, username):
 def unFollow(request, username):
 
     if request.user.is_authenticated and request.method=="POST":
-        # currentPath = request.META.get('HTTP_REFERER').split("127.0.0.1:8000")[1]
+        # currentPath = request.META.get('HTTP_REFERER').split("vercel.app")[1]
         profile_a = UserProfile.objects.get(user = request.user)
 
         user_ = User.objects.get(username = username)
@@ -303,7 +303,6 @@ def notificationPage(request):
         if 'page' in request.GET:
             page = request.GET['page']
         page_obj = paginate.get_page(page)
-        print(len(page_obj))
         context = {'notifications' : page_obj}
         
         return render(request, "account/notifications.html", context)

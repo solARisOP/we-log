@@ -8,7 +8,7 @@
 
 {% block body %}
 <div class="container-fluid my-3" style="max-width: 1000px;">
-    <h3 class="mb-4">Create your blog</h3>
+    <h3 class="mb-4">Update your blog</h3>
     <form method="POST" onsubmit="return updateBlog(this)" enctype="multipart/form-data">
         {% csrf_token %}
         <input type="text" name="blogSlug" id="blogSlug" data-slug={{post.slug}} hidden>
@@ -62,25 +62,12 @@
         image_class_list: [
            {title: 'Responsive', value: 'img-fluid'}
         ],
-        convert_newlines_to_brs : true,
-        remove_linebreaks : false,
-        force_br_newlines : true,
-        force_p_newlines : false,
-        newline_behavior: 'linebreak',
-        setup : function(editor) {
-
-            editor.on('EditorChange ', function(ed) {
-                // we are cleaning empty paragraphs
-                ed.content = ed.content.replace(/(<p>&nbsp;<\/p>)/gi,'<br />');
-            });
-
-        },
     });
 </script>
 
 <script>
     function updateBlog(form) {
-        document.getElementById('ublog').value = tinymce.get("ucontent").getContent();
+        document.getElementById('ublog').value = tinymce.get("ucontent").getContent().replace(/[\r\n]+/g, "<br />");
         link = form.blogSlug.dataset.slug
         form.action = `/blog/updater/${link}`;
     }

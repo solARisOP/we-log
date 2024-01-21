@@ -208,7 +208,7 @@ div.code-toolbar>.toolbar {
     position: absolute;
     z-index: 10;
     top: .3em;
-    right: .2em;
+    right: .5em;
     transition: opacity .3s ease-in-out;
     opacity: 0
 }

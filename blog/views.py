@@ -55,7 +55,6 @@ def blogPost(request, slug):
 
 def postComment(request):
     if request.method=="POST":
-        print("checking")
         comment = request.POST["comment"]
         user = request.user
         slug = request.POST["postSlug"]
@@ -116,7 +115,6 @@ def updateView(request, slug):
         post = Post.objects.get(slug = slug)
         if post is not None and post.user == request.user:
             context = {'post' : post}
-            print(post.title)
             return render(request, "blog/blogUpdate.html", context)
         else:
             messages.error(request, "cannot understand you request")
@@ -166,7 +164,6 @@ def deleteBlog(request, slug):
 
 def LikesDislikes(request, slug):
     if request.user.is_authenticated and request.method == "POST":
-        print("here")
         data = json.loads(request.body.decode('utf-8'))
         opt = data['message']
         post = Post.objects.get(slug = slug) 
