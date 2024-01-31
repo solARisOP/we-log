@@ -6,14 +6,15 @@ Welog is a blog website developed using Django, HTML, JavaScript, and Bootstrap.
 
 # Tech stack
 
-Back-end : Django        
-Front-end : HTML, JavaScript, Bootstrap  
-Database : PostgreSql  
-Storage : AWS s3 
+* Back-end : Django        
+* Front-end : HTML, JavaScript, Bootstrap  
+* Database : PostgreSql  
+* Storage : AWS s3
+  
 # Features
 
-User Authentication : Secure signup and login system with email OTP verification.  
-Blog Creation : Users can create, edit, and delete their blogs.  
-Social Interactions : Like and comment on blogs, follow other creators.  
-Notifications : Get notified when someone follows, likes, or comments on your blog.  
-Password Reset : Implement a secure password reset mechanism via email OTP.  
+* User Authentication : Secure signup and login system with email OTP verification.  
+* Blog Creation : Users can create, edit, and delete their blogs.  
+* Social Interactions : Like and comment on blogs, follow other creators.  
+* Notifications : Get notified when someone follows, likes, or comments on your blog.  
+* Password Reset : Implement a secure password reset mechanism via email OTP.  
